@@ -20,7 +20,7 @@ function LoginPage({ pageHandler, loginHandle, setUsername, setPassword, error }
       }}>
         <div className="App"> 
           <div>
-            <h1 className="App-title">Food Location Finder</h1>
+            <h1 className="App-title">Busy Bookings</h1>
           </div>
           <div>
             <div className="App-title">Login</div>
