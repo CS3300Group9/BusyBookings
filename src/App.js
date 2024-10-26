@@ -10,7 +10,8 @@ function App() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-  var users = [];
+  //TEMPORARY UNTIL DB MADE
+  const [users, setUsers] = useState(new Map());
 
   //CHANGE ME FOR SQL DB
   const handleLogin = () => {
@@ -28,6 +29,40 @@ function App() {
     }
   };
 
+  //CHANGE ME FOR SQL DB
+  const handleCreateAccount = () => {
+    // Basic validation
+    if (!username || !password) {
+      setError('Please fill in all fields.');
+      return;
+    }
+
+    // Ensure Password is more than 8 characters
+    if (password.length < 8) {
+        setError('Password must be at least 8 characters');
+        return;
+    }
+
+    // Check if the username already exists in the Map
+    if (users.has(username)) {
+      setError('Username already exists. Please choose a different one.');
+      return;
+    }
+
+    // Store the new username and password in the Map
+    setUsers((prevUsers) => {
+      const updatedUsers = new Map(prevUsers);
+      updatedUsers.set(username, password);
+      return updatedUsers;
+    });
+
+    // Reset fields and navigate to the login page
+    setUsername('');
+    setPassword('');
+    setError('');
+    setCurrentPage('login');
+  };
+
   return (
     <>
       {currentPage === 'login' ? (
@@ -40,9 +75,15 @@ function App() {
           error={error}
         />
       ) : currentPage === 'Logged in' ? (
-        <div></div>
+        <div></div> //MAIN PAGE HERE
       ) : (
-        <CreateAccountPage/>
+        <CreateAccountPage 
+          pageHandler={setCurrentPage}
+          createAccountHandler={handleCreateAccount}
+          setUsername={setUsername} 
+          setPassword={setPassword}
+          error={error}
+        />
       )}
     </>
   );
