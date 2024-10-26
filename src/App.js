@@ -1,11 +1,12 @@
 import './App.css';
 import React, { useState } from 'react';
 import LoginPage from './Components/LoginPage';
+import InitialPage from './Components/InitialPage';
 import CreateAccountPage from './Components/CreateAccountPage';
 
 function App() {
 
-  const [currentPage, setCurrentPage] = useState('login');
+  const [currentPage, setCurrentPage] = useState();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -60,13 +61,16 @@ function App() {
     setUsername('');
     setPassword('');
     setError('');
-    setCurrentPage('login');
+    setCurrentPage('initial');
   };
 
-  return (
-    <>
-      {currentPage === 'login' ? (
-        // Pass `users` as a prop to LoginPage
+  switch (currentPage) {
+    case 'initial':
+      return (
+        <InitialPage pageHandler={setCurrentPage}/>
+      );
+    case 'customerLogin':
+      return (
         <LoginPage 
           pageHandler={setCurrentPage}
           loginHandle={handleLogin} 
@@ -74,9 +78,19 @@ function App() {
           setPassword={setPassword}
           error={error}
         />
-      ) : currentPage === 'Logged in' ? (
-        <div></div> //MAIN PAGE HERE
-      ) : (
+      );
+    case 'businessLogin':
+      return (
+        <LoginPage 
+          pageHandler={setCurrentPage}
+          loginHandle={handleLogin} 
+          setUsername={setUsername} 
+          setPassword={setPassword}
+          error={error}
+        />
+      );
+    case 'createAccount':
+      return (
         <CreateAccountPage 
           pageHandler={setCurrentPage}
           createAccountHandler={handleCreateAccount}
@@ -84,9 +98,16 @@ function App() {
           setPassword={setPassword}
           error={error}
         />
-      )}
-    </>
-  );
+      );
+    case 'Logged in':
+      return (
+        <div></div> //MAIN PAGE HERE
+      );
+    default:
+      return (
+        <InitialPage pageHandler={setCurrentPage}/>
+      );
+  }
 }
 
 export default App;
