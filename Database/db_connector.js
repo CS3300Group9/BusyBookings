@@ -57,6 +57,6 @@ class db_connector {
 
 
 //Example Call
-//db = new db_connector
+db = new db_connector
 //db.add_user("Test", "Test", "admin")
 
