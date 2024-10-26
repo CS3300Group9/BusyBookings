@@ -6,7 +6,7 @@ import CreateAccountPage from './Components/CreateAccountPage';
 
 function App() {
 
-  const [currentPage, setCurrentPage] = useState();
+  const [currentPage, setCurrentPage] = useState('initial');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');

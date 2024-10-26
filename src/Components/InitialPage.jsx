@@ -6,12 +6,12 @@ function InitialPage({pageHandler}) {
             <input
               type="button"
               value="I am a customer"
-              onClick={pageHandler('customerLogin')}
+              onClick={() => pageHandler('customerLogin')}
             />
             <input
               type="button"
               value="I am a business"
-              onClick={pageHandler('businessLogin')}
+              onClick={() => pageHandler('businessLogin')}
             />
         </div>
     );
