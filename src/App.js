@@ -1,4 +1,3 @@
-// App.js
 import './App.css';
 import React, { useState } from 'react';
 import LoginPage from './Components/LoginPage';
@@ -18,8 +17,13 @@ function App() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const [startTime, setStartTime] = useState(0);
-  const [endTime, setEndTime] = useState(0);
+  const [startTime, setStartTime] = useState('');
+  const [endTime, setEndTime] = useState('');
+  const [name, setName] = useState('');
+  const [contactInfo, setContactInfo] = useState('');
+  const [notes, setNotes] = useState('');
+  const [business, setBusiness] = useState('');
+  const [customer, setCustomer] = useState('');
   const [currentDay, setCurrDay] = useState(0);
   const [userType, setUserType] = useState('customer');
 
@@ -84,10 +88,23 @@ function App() {
   };
 
   const createBooking = () => {
+    if (!startTime || !endTime || !name || !contactInfo || !business || !customer) {
+      setError('Please fill in all fields');
+      return;
+    }
+
     setBookings((prevBookings) => {
       const dayKey = currentDay.date.toString();
-      const newBooking = new Booking(startTime, endTime);
-  
+      const newBooking = new Booking(
+        startTime,
+        endTime,
+        name,
+        contactInfo,
+        notes,
+        business,
+        customer
+      );
+
       // If no bookings exist for the current day, create a new array
       if (!prevBookings.has(dayKey)) {
         const updatedBookings = new Map(prevBookings);
@@ -102,10 +119,18 @@ function App() {
         return updatedBookings;
       }
     });
-  
+
+    // Clear form fields and navigate back
+    setStartTime('');
+    setEndTime('');
+    setName('');
+    setContactInfo('');
+    setNotes('');
+    setBusiness('');
+    setCustomer('');
+    setError('');
     setCurrentPage('customerLanding');
   };
-  
 
   switch (currentPage) {
     case 'initial':
@@ -153,7 +178,7 @@ function App() {
     case 'customerLanding':
       return (
         <div>
-          <Calendar 
+          <Calendar
             pageHandler={setCurrentPage}
             bookings={bookings}
             setCurrDay={setCurrDay}
@@ -169,10 +194,15 @@ function App() {
     case 'createBookings':
       return (
         <div>
-          <CreateBookingsPage 
+          <CreateBookingsPage
             createBooking={createBooking}
             setStartTime={setStartTime}
             setEndTime={setEndTime}
+            setName={setName}
+            setContactInfo={setContactInfo}
+            setNotes={setNotes}
+            setBusiness={setBusiness}
+            setCustomer={setCustomer}
             error={error}
           />
         </div>

@@ -1,4 +1,4 @@
-class booking {
+class Booking {
     constructor(startTime, endTime, name, contactInfo, notes, business, customer) {
         this.startTime = startTime;
         this.endTime = endTime;
@@ -10,18 +10,24 @@ class booking {
     }
 
     static getDisplay(bookingInstance) {
-        if (bookingInstance === null || bookingInstance === undefined) {
-            return (
-                <div></div>
-            )
+        if (!bookingInstance) {
+            return <div></div>;
         } else {
             return (
-                <div>
-                    {bookingInstance.startTime} to {bookingInstance.endTime}
+                <div className="booking-display">
+                    <p><strong>Time:</strong> {bookingInstance.startTime} to {bookingInstance.endTime}</p>
+                    <p><strong>Customer:</strong> {bookingInstance.customer}</p>
+                    <p><strong>Business:</strong> {bookingInstance.business}</p>
+                    {bookingInstance.notes && (
+                        <p><strong>Notes:</strong> {bookingInstance.notes}</p>
+                    )}
+                    {bookingInstance.contactInfo && (
+                        <p><strong>Contact:</strong> {bookingInstance.contactInfo}</p>
+                    )}
                 </div>
-            )
+            );
         }
     }
 }
 
-export default booking;
+export default Booking;
