@@ -85,17 +85,20 @@ function App() {
 
   const createBooking = () => {
 
-    console.log(currentDay.date.toString())
-
     setBookings((prevBookings) => {
-      const updatedBookings = new Map(prevBookings)
-      updatedBookings.set(currentDay.date.toString(), new Booking(startTime, endTime));
-      console.log(updatedBookings)
-      return updatedBookings;
+      if (prevBookings.get(currentDay.date.toString()) === undefined) {
+        const updatedBookings = new Map(prevBookings)
+        updatedBookings.set(currentDay.date.toString(), [new Booking(startTime, endTime)])
+        return updatedBookings;
+      } else {
+        var list = prevBookings.get(currentDay.date.toString())
+        list.push(new Booking(startTime, endTime))
+        const updatedBookings = new Map(prevBookings)
+        updatedBookings.set(currentDay.date.toString(), list)
+        console.log(updatedBookings)
+        return updatedBookings
+      }
     });
-
-    console.log(bookings.get(currentDay.date.toString()))
-    console.log(bookings)
 
     setCurrentPage('customerLanding')
   }
