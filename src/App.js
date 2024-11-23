@@ -6,8 +6,6 @@ import InitialPage from './Components/InitialPage';
 import CreateAccountPage from './Components/CreateAccountPage';
 import LandingPage from './Components/LandingPage';
 import BusinessLandingPage from './Components/BusinessLandingPage';
-import BusinessDashboard from './Components/BusinessDashboard'; // Import the new dashboard
-import booking from './Booking'; // Import the booking class
 
 function App() {
   const [currentPage, setCurrentPage] = useState('initial');
@@ -19,28 +17,7 @@ function App() {
   // TEMPORARY UNTIL DB MADE
   const [users, setUsers] = useState(new Map());
 
-  // Mock bookings for the Business Dashboard
-  const [bookings] = useState([
-    new booking(
-      "2024-11-23 10:00",
-      "2024-11-23 11:00",
-      "John Doe",
-      "johndoe@example.com",
-      "First-time customer",
-      "Male Hair Cut",
-      "John Doe"
-    ),
-    new booking(
-      "2024-11-24 14:00",
-      "2024-11-24 15:30",
-      "Jane Smith",
-      "janesmith@example.com",
-      "Follow-up Hair Dye Appointment",
-      "Business B",
-      "Jane Smith"
-    ),
-  ]);
-
+  // Update handleLogin to accept userType
   const handleLogin = (userType) => {
     if (users.has(username)) {
       const user = users.get(username);
@@ -141,13 +118,7 @@ function App() {
     case 'customerLanding':
       return <LandingPage />;
     case 'businessLanding':
-      return (
-        <BusinessLandingPage
-          navigateToCustomerDashboard={() => setCurrentPage('customerDashboard')}
-        />
-      );
-    case 'customerDashboard':
-      return <BusinessDashboard bookings={bookings} />;
+      return <BusinessLandingPage />;
     default:
       return <InitialPage pageHandler={setCurrentPage} />;
   }
