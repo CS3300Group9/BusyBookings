@@ -57,7 +57,3 @@ export default class db_connector {
 
 
 //var db = new db_connector();
-
-
-
-

@@ -2,6 +2,7 @@ import './App.css';
 import React, { useState } from 'react';
 import LoginPage from './Components/LoginPage';
 import CreateAccountPage from './Components/CreateAccountPage';
+//import db_connector from './Database/db_connector';
 
 function App() {
 
@@ -12,9 +13,14 @@ function App() {
 
   //TEMPORARY UNTIL DB MADE
   const [users, setUsers] = useState(new Map());
+  //const db = new db_connector;
+  //var con = require("./Database/connect.js");
+
 
   //CHANGE ME FOR SQL DB
   const handleLogin = () => {
+    //Test Database
+
     // Check if the username exists in the map
     if (users.has(username)) {
       // Check if the password matches
