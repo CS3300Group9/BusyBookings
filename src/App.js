@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import LoginPage from './Components/LoginPage';
 import InitialPage from './Components/InitialPage';
 import CreateAccountPage from './Components/CreateAccountPage';
+import Calendar from './Calendar';
 
 function App() {
 
@@ -101,7 +102,7 @@ function App() {
       );
     case 'Logged in':
       return (
-        <div></div> //MAIN PAGE HERE
+        <Calendar/>
       );
     default:
       return (
