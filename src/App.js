@@ -1,3 +1,4 @@
+// App.js
 import './App.css';
 import React, { useState } from 'react';
 import LoginPage from './Components/LoginPage';
@@ -5,10 +6,12 @@ import InitialPage from './Components/InitialPage';
 import CreateAccountPage from './Components/CreateAccountPage';
 import CreateBookingsPage from './Components/CreateBookingsPage';
 import Calendar from './Calendar';
-import Booking from './Booking';
+import LandingPage from './Components/LandingPage';
+import BusinessLandingPage from './Components/BusinessLandingPage';
+import BusinessDashboard from './Components/BusinessDashboard'; // Import the new dashboard
+import booking from './Booking'; // Import the booking class
 
 function App() {
-
   const [currentPage, setCurrentPage] = useState('initial');
   const [error, setError] = useState('');
 
@@ -18,19 +21,52 @@ function App() {
   const [startTime, setStartTime] = useState(0);
   const [endTime, setEndTime] = useState(0);
   const [currentDay, setCurrDay] = useState(0);
+  const [userType, setUserType] = useState('customer');
+  const [error, setError] = useState('');
 
-  //TEMPORARY UNTIL DB MADE
+  // TEMPORARY UNTIL DB MADE
   const [users, setUsers] = useState(new Map());
   const [bookings, setBookings] = useState(new Map());
 
-  //CHANGE ME FOR SQL DB
-  const handleLogin = () => {
-    // Check if the username exists in the map
+  // Mock bookings for the Business Dashboard
+  const [bookings] = useState([
+    new booking(
+      "2024-11-23 10:00",
+      "2024-11-23 11:00",
+      "John Doe",
+      "johndoe@example.com",
+      "First-time customer",
+      "Male Hair Cut",
+      "John Doe"
+    ),
+    new booking(
+      "2024-11-24 14:00",
+      "2024-11-24 15:30",
+      "Jane Smith",
+      "janesmith@example.com",
+      "Follow-up Hair Dye Appointment",
+      "Business B",
+      "Jane Smith"
+    ),
+  ]);
+
+  const handleLogin = (userType) => {
     if (users.has(username)) {
-      // Check if the password matches
-      if (users.get(username) === password) {
-        setError(''); // Clear any existing error
-        setCurrentPage('Logged in'); // Successfully logged in
+      const user = users.get(username);
+      if (user.password === password) {
+        if (user.userType === userType) {
+          setError('');
+          setUsername('');
+          setPassword('');
+          setUserType('customer');
+          setCurrentPage(
+            userType === 'customer' ? 'customerLanding' : 'businessLanding'
+          );
+        } else {
+          setError(
+            `This account is registered as a ${user.userType}, not a ${userType}.`
+          );
+        }
       } else {
         setError('Incorrect password. Please try again.');
       }
@@ -39,36 +75,31 @@ function App() {
     }
   };
 
-  //CHANGE ME FOR SQL DB
-  const handleCreateAccount = () => {
-    // Basic validation
+  const handleCreateAccount = (userType) => {
     if (!username || !password) {
       setError('Please fill in all fields.');
       return;
     }
 
-    // Ensure Password is more than 8 characters
     if (password.length < 8) {
-        setError('Password must be at least 8 characters');
-        return;
+      setError('Password must be at least 8 characters');
+      return;
     }
 
-    // Check if the username already exists in the Map
     if (users.has(username)) {
       setError('Username already exists. Please choose a different one.');
       return;
     }
 
-    // Store the new username and password in the Map
     setUsers((prevUsers) => {
       const updatedUsers = new Map(prevUsers);
-      updatedUsers.set(username, password);
+      updatedUsers.set(username, { password, userType });
       return updatedUsers;
     });
 
-    // Reset fields and navigate to the login page
     setUsername('');
     setPassword('');
+    setUserType('customer');
     setError('');
     setCurrentPage('initial');
   };
@@ -92,40 +123,48 @@ function App() {
 
   switch (currentPage) {
     case 'initial':
-      return (
-        <InitialPage pageHandler={setCurrentPage}/>
-      );
+      return <InitialPage pageHandler={setCurrentPage} />;
     case 'customerLogin':
       return (
-        <LoginPage 
+        <LoginPage
           pageHandler={setCurrentPage}
-          loginHandle={handleLogin} 
-          setUsername={setUsername} 
+          loginHandle={handleLogin}
+          setUsername={setUsername}
           setPassword={setPassword}
+          username={username}
+          password={password}
           error={error}
+          userType="customer"
         />
       );
     case 'businessLogin':
       return (
-        <LoginPage 
+        <LoginPage
           pageHandler={setCurrentPage}
-          loginHandle={handleLogin} 
-          setUsername={setUsername} 
+          loginHandle={handleLogin}
+          setUsername={setUsername}
           setPassword={setPassword}
+          username={username}
+          password={password}
           error={error}
+          userType="business"
         />
       );
     case 'createAccount':
       return (
-        <CreateAccountPage 
+        <CreateAccountPage
           pageHandler={setCurrentPage}
           createAccountHandler={handleCreateAccount}
-          setUsername={setUsername} 
+          setUsername={setUsername}
           setPassword={setPassword}
+          setUserType={setUserType}
+          username={username}
+          password={password}
+          userType={userType}
           error={error}
         />
       );
-    case 'Logged in':
+    case 'customerLanding':
       return (
         <div>
           <Calendar 
@@ -134,6 +173,12 @@ function App() {
             setCurrDay={setCurrDay}
           />
         </div>
+      );
+    case 'businessLanding':
+      return (
+        <BusinessLandingPage
+          navigateToCustomerDashboard={() => setCurrentPage('customerDashboard')}
+        />
       );
     case 'createBookings':
       return (
@@ -145,11 +190,11 @@ function App() {
             error={error}
           />
         </div>
-      )
-    default:
-      return (
-        <InitialPage pageHandler={setCurrentPage}/>
       );
+    case 'customerDashboard':
+      return <BusinessDashboard bookings={bookings} />;
+    default:
+      return <InitialPage pageHandler={setCurrentPage} />;
   }
 }
 
