@@ -84,24 +84,28 @@ function App() {
   };
 
   const createBooking = () => {
-
     setBookings((prevBookings) => {
-      if (prevBookings.get(currentDay.date.toString()) === undefined) {
-        const updatedBookings = new Map(prevBookings)
-        updatedBookings.set(currentDay.date.toString(), [new Booking(startTime, endTime)])
+      const dayKey = currentDay.date.toString();
+      const newBooking = new Booking(startTime, endTime);
+  
+      // If no bookings exist for the current day, create a new array
+      if (!prevBookings.has(dayKey)) {
+        const updatedBookings = new Map(prevBookings);
+        updatedBookings.set(dayKey, [newBooking]);
         return updatedBookings;
       } else {
-        var list = prevBookings.get(currentDay.date.toString())
-        list.push(new Booking(startTime, endTime))
-        const updatedBookings = new Map(prevBookings)
-        updatedBookings.set(currentDay.date.toString(), list)
-        console.log(updatedBookings)
-        return updatedBookings
+        // Create a new array with the existing bookings and add the new booking
+        const updatedBookings = new Map(prevBookings);
+        const existingBookings = [...updatedBookings.get(dayKey)];
+        existingBookings.push(newBooking);
+        updatedBookings.set(dayKey, existingBookings);
+        return updatedBookings;
       }
     });
-
-    setCurrentPage('customerLanding')
-  }
+  
+    setCurrentPage('customerLanding');
+  };
+  
 
   switch (currentPage) {
     case 'initial':
