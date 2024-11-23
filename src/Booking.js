@@ -1,7 +1,7 @@
 class Booking {
     static idCounter = 0;
 
-    constructor(startTime, endTime, name, contactInfo, notes, business, customer) {
+    constructor(startTime, endTime, name, contactInfo, notes, business, customer, date) {
         this.id = Booking.idCounter++;
         this.startTime = startTime;
         this.endTime = endTime;
@@ -10,6 +10,7 @@ class Booking {
         this.notes = notes;
         this.business = business;
         this.customer = customer;
+        this.date = date;
     }
 
     static getDisplay(bookingInstance) {

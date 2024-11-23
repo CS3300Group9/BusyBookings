@@ -106,6 +106,8 @@ function App() {
         contactInfo,
         notes || '', // Allow optional notes to default to an empty string
         business,
+        "test",
+        currentDay
       );
   
       if (!prevBookings.has(dayKey)) {
@@ -134,25 +136,34 @@ function App() {
   };
   
   // Update a booking
-  const updateBooking = (updatedBooking) => {
-    if (!selectedBooking || !selectedBooking.date) {
+  const updateBooking = () => {
+    if (!selectedBooking) {
       setError('No booking selected to update.');
       return;
     }
+
+    const updatedBooking = new Booking(
+      startTime,
+      endTime,
+      name,
+      contactInfo,
+      notes || '', // Allow optional notes to default to an empty string
+      business,
+      "test",
+      currentDay
+    );
+
+    console.log(selectedBooking)
+    console.log(updatedBooking)
   
     const dayKey = selectedBooking.date.toString();
-    const updatedBookings = new Map(bookings);
-    const existingBookings = updatedBookings.get(dayKey) || [];
+    const existingBookings = bookings.get(dayKey) || [];
   
     const updatedBookingIndex = existingBookings.findIndex(
-      (b) => b.id === updatedBooking.id // Compare by ID
+      (b) => b.id === selectedBooking.id // Compare by ID
     );
   
-    if (updatedBookingIndex !== -1) {
-      existingBookings[updatedBookingIndex] = { ...updatedBooking }; // Update booking with new values
-      updatedBookings.set(dayKey, existingBookings);
-      setBookings(updatedBookings);
-    }
+    existingBookings[updatedBookingIndex] = updatedBooking;
   
     // Clear fields and reset state
     setStartTime('');
