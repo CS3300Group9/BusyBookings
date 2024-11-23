@@ -1,13 +1,13 @@
-// Components/BusinessLandingPage.js
-import React from 'react';
-
-function BusinessLandingPage() {
-  return (
-    <div>
-      <h1>Welcome to the Business Dashboard</h1>
-      {/* Add business-specific content here */}
-    </div>
-  );
-}
-
-export default BusinessLandingPage;
+function BusinessLandingPage({ pageHandler }) {
+    return (
+      <div>
+        <h1>Welcome to the Business Dashboard</h1>
+        {/* Business-specific content */}
+        <button onClick={() => pageHandler('businessManagement')}>
+          Manage Your Businesses
+        </button>
+      </div>
+    );
+  }
+  
+  export default BusinessLandingPage;

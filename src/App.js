@@ -6,6 +6,8 @@ import InitialPage from './Components/InitialPage';
 import CreateAccountPage from './Components/CreateAccountPage';
 import LandingPage from './Components/LandingPage';
 import BusinessLandingPage from './Components/BusinessLandingPage';
+import BusinessManagementPage from './Components/BusinessManagementPage';
+
 
 function App() {
   const [currentPage, setCurrentPage] = useState('initial');
@@ -16,6 +18,10 @@ function App() {
 
   // TEMPORARY UNTIL DB MADE
   const [users, setUsers] = useState(new Map());
+  const [businesses, setBusinesses] = useState(new Map());
+  const [loggedInUser, setLoggedInUser] = useState(null);
+
+  
 
   // Update handleLogin to accept userType
   const handleLogin = (userType) => {
@@ -27,6 +33,7 @@ function App() {
           setUsername('');
           setPassword('');
           setUserType('customer');
+          setLoggedInUser({ username, userType });
           setCurrentPage(
             userType === 'customer' ? 'customerLanding' : 'businessLanding'
           );
@@ -42,6 +49,7 @@ function App() {
       setError('Username does not exist. Please create an account.');
     }
   };
+
 
   const handleCreateAccount = (userType) => {
     if (!username || !password) {
@@ -65,11 +73,16 @@ function App() {
       return updatedUsers;
     });
 
+    setLoggedInUser({ username, userType });
+
+
     setUsername('');
     setPassword('');
     setUserType('customer');
     setError('');
-    setCurrentPage('initial');
+    setCurrentPage(
+      userType === 'customer' ? 'customerLanding' : 'businessLanding'
+    );
   };
 
   switch (currentPage) {
@@ -118,7 +131,20 @@ function App() {
     case 'customerLanding':
       return <LandingPage />;
     case 'businessLanding':
-      return <BusinessLandingPage />;
+      return (
+        <BusinessLandingPage
+          pageHandler={setCurrentPage} // Add this line
+        />
+      );
+    case 'businessManagement':
+      return (
+        <BusinessManagementPage
+          user={loggedInUser}
+          businesses={businesses}
+          setBusinesses={setBusinesses}
+          pageHandler={setCurrentPage}
+        />
+      );
     default:
       return <InitialPage pageHandler={setCurrentPage} />;
   }
