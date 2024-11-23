@@ -14,6 +14,11 @@ export default class Calendar extends Component {
           currentDay: new Date()
         }
       }
+
+  handleCalendarDayClick = (day) => {
+    this.props.setCurrDay(day)
+    this.props.pageHandler('createBookings')
+  }
     
   render() {
     return (
@@ -29,7 +34,7 @@ export default class Calendar extends Component {
               })
             }
           </div>
-          <CalendarDays day={this.state.currentDay} handleCalendarDayClick={this.props.handleCalendarDayClick} />
+          <CalendarDays day={this.state.currentDay} handleCalendarDayClick={this.handleCalendarDayClick} bookings={this.props.bookings}/>
         </div>
       </div>
     )

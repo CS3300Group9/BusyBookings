@@ -3,21 +3,25 @@ import React, { useState } from 'react';
 import LoginPage from './Components/LoginPage';
 import InitialPage from './Components/InitialPage';
 import CreateAccountPage from './Components/CreateAccountPage';
+import CreateBookingsPage from './Components/CreateBookingsPage';
 import Calendar from './Calendar';
 import Booking from './Booking';
 
 function App() {
 
   const [currentPage, setCurrentPage] = useState('initial');
+  const [error, setError] = useState('');
+
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+
+  const [startTime, setStartTime] = useState(0);
+  const [endTime, setEndTime] = useState(0);
+  const [currentDay, setCurrDay] = useState(0);
 
   //TEMPORARY UNTIL DB MADE
   const [users, setUsers] = useState(new Map());
-  const [bookings, setBookings] = useState([]);
-
-  var test = new Booking(1000, 1200, "John", "903-731-XXXX", "", "Rocky's Pizza", 123123123);
+  const [bookings, setBookings] = useState(new Map());
 
   //CHANGE ME FOR SQL DB
   const handleLogin = () => {
@@ -69,8 +73,21 @@ function App() {
     setCurrentPage('initial');
   };
 
-  const handleCalendarDayClick = () => {
+  const createBooking = () => {
 
+    console.log(currentDay.date.toString())
+
+    setBookings((prevBookings) => {
+      const updatedBookings = new Map(prevBookings)
+      updatedBookings.set(currentDay.date.toString(), new Booking(startTime, endTime));
+      console.log(updatedBookings)
+      return updatedBookings;
+    });
+
+    console.log(bookings.get(currentDay.date.toString()))
+    console.log(bookings)
+
+    setCurrentPage('Logged in')
   }
 
   switch (currentPage) {
@@ -111,10 +128,24 @@ function App() {
     case 'Logged in':
       return (
         <div>
-          <Calendar handleCalendarDayClick={handleCalendarDayClick}/>
-          {Booking.getDisplay(test)}
+          <Calendar 
+            pageHandler={setCurrentPage}
+            bookings={bookings}
+            setCurrDay={setCurrDay}
+          />
         </div>
       );
+    case 'createBookings':
+      return (
+        <div>
+          <CreateBookingsPage 
+            createBooking={createBooking}
+            setStartTime={setStartTime}
+            setEndTime={setEndTime}
+            error={error}
+          />
+        </div>
+      )
     default:
       return (
         <InitialPage pageHandler={setCurrentPage}/>

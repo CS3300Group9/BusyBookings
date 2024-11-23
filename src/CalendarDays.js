@@ -1,3 +1,5 @@
+import Booking from "./Booking";
+
 function CalendarDays(props) {
     let firstDayOfMonth = new Date(props.day.getFullYear(), props.day.getMonth(), 1);
     let weekdayOfFirstDay = firstDayOfMonth.getDay();
@@ -30,8 +32,10 @@ function CalendarDays(props) {
           currentDays.map((day) => {
             return (
               <div className={"calendar-day" + (day.currentMonth ? " current" : "") + (day.selected ? " selected" : "")}
-                    onClick={() => props.handleCalendarDayClick()}>
+                    onClick={() => props.handleCalendarDayClick(day)}>
                 <p>{day.number}</p>
+                {console.log(day)}
+                {Booking.getDisplay(props.bookings.get(day.date.toString()))}
               </div>
             )
           })

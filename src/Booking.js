@@ -10,11 +10,17 @@ class booking {
     }
 
     static getDisplay(bookingInstance) {
-        return (
-            <div>
-                <h1>{bookingInstance.business}</h1>
-            </div>
-        )
+        if (bookingInstance === null || bookingInstance === undefined) {
+            return (
+                <div></div>
+            )
+        } else {
+            return (
+                <div>
+                    {bookingInstance.startTime} to {bookingInstance.endTime}
+                </div>
+            )
+        }
     }
 }
 
