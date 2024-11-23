@@ -29,7 +29,7 @@ export default class Calendar extends Component {
               })
             }
           </div>
-          <CalendarDays day={this.state.currentDay} changeCurrentDay={this.changeCurrentDay} />
+          <CalendarDays day={this.state.currentDay} handleCalendarDayClick={this.props.handleCalendarDayClick} />
         </div>
       </div>
     )

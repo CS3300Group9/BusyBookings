@@ -4,6 +4,7 @@ import LoginPage from './Components/LoginPage';
 import InitialPage from './Components/InitialPage';
 import CreateAccountPage from './Components/CreateAccountPage';
 import Calendar from './Calendar';
+import Booking from './Booking';
 
 function App() {
 
@@ -14,6 +15,9 @@ function App() {
 
   //TEMPORARY UNTIL DB MADE
   const [users, setUsers] = useState(new Map());
+  const [bookings, setBookings] = useState([]);
+
+  var test = new Booking(1000, 1200, "John", "903-731-XXXX", "", "Rocky's Pizza", 123123123);
 
   //CHANGE ME FOR SQL DB
   const handleLogin = () => {
@@ -65,6 +69,10 @@ function App() {
     setCurrentPage('initial');
   };
 
+  const handleCalendarDayClick = () => {
+
+  }
+
   switch (currentPage) {
     case 'initial':
       return (
@@ -102,7 +110,10 @@ function App() {
       );
     case 'Logged in':
       return (
-        <Calendar/>
+        <div>
+          <Calendar handleCalendarDayClick={handleCalendarDayClick}/>
+          {Booking.getDisplay(test)}
+        </div>
       );
     default:
       return (
