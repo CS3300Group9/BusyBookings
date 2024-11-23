@@ -1,0 +1,38 @@
+import { useEffect, useState } from 'react';
+
+const useGapiScript = () => {
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    const loadScript = () => {
+      if (document.getElementById('gapi-script')) {
+        setIsLoaded(true);
+        return;
+      }
+
+      const script = document.createElement('script');
+      script.id = 'gapi-script';
+      script.src = 'https://apis.google.com/js/api.js';
+      script.async = true;
+      script.defer = true;
+
+      script.onload = () => {
+        console.log('Google API script loaded successfully.');
+        setIsLoaded(true);
+      };
+
+      script.onerror = () => {
+        console.error('Failed to load Google API script.');
+        setIsLoaded(false);
+      };
+
+      document.body.appendChild(script);
+    };
+
+    loadScript();
+  }, []);
+
+  return isLoaded;
+};
+
+export default useGapiScript;
