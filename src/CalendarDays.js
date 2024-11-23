@@ -34,8 +34,14 @@ function CalendarDays(props) {
               <div className={"calendar-day" + (day.currentMonth ? " current" : "") + (day.selected ? " selected" : "")}
                     onClick={() => props.handleCalendarDayClick(day)}>
                 <p>{day.number}</p>
-                {console.log(day)}
-                {Booking.getDisplay(props.bookings.get(day.date.toString()))}
+                {
+                  props.bookings.get(day.date.toString())?.map((booking, index) => (
+                    <div key={index} className="booking-item">
+                      {Booking.getDisplay(booking)}
+                    </div>
+                  ))
+                }
+
               </div>
             )
           })
