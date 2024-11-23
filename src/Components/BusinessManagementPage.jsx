@@ -1,5 +1,6 @@
 // Components/BusinessManagemPage.js
 //THIS SHOULD ALLOW BUSINESS USERS TO CREATE BUSINESSESD
+//Management PAge
 import React, { useState } from 'react';
 
 function BusinessManagementPage({ user, businesses, setBusinesses, pageHandler }) {
