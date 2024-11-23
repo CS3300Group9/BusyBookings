@@ -12,3 +12,5 @@ function BusinessLandingPage({ navigateToCustomerDashboard }) {
 }
 
 export default BusinessLandingPage;
+
+// add some comments to allow github to merge 
