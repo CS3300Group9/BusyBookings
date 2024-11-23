@@ -9,7 +9,7 @@ function BusinessLandingPage({ pageHandler, navigateToCustomerDashboard }) {
         Manage Your Businesses
       </button>
       {/* Using a lambda directly */}
-      <button onClick={() => pageHandler('')}>
+      <button onClick={() => pageHandler('businessDashboard')}>
         Go to Business Dashboard
       </button>
     </div>

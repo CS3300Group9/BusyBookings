@@ -29,6 +29,7 @@ function App() {
   const [customer, setCustomer] = useState('');
   const [currentDay, setCurrDay] = useState(0);
   const [userType, setUserType] = useState('customer');
+  const [currentBusiness, setCurrentBusiness] = useState(null);
 
   // TEMPORARY UNTIL DB MADE
   const [users, setUsers] = useState(new Map());
@@ -39,7 +40,6 @@ function App() {
 
   const [businesses, setBusinesses] = useState(new Map());
   const [loggedInUser, setLoggedInUser] = useState(null);
-  const [businessAvailabilities, setBusinessAvailabilities] = useState(new Map()); // Map<businessId, {startTime, endTime}>
 
   
 
@@ -118,7 +118,7 @@ function App() {
         name,
         contactInfo,
         notes,
-        business,
+        business.name,
         customer
       );
 
@@ -130,7 +130,7 @@ function App() {
       } else {
         // Create a new array with the existing bookings and add the new booking
         const updatedBookings = new Map(prevBookings);
-        const existingBookings = [...updatedBookings.get(dayKey)];
+        const existingBookings = updatedBookings.get(dayKey) || [];
         existingBookings.push(newBooking);
         updatedBookings.set(dayKey, existingBookings);
         return updatedBookings;
@@ -237,7 +237,17 @@ function App() {
           user={loggedInUser}
           businesses={businesses}
           setBusinesses={setBusinesses}
+          setCurrentBusiness={setCurrentBusiness}
           pageHandler={setCurrentPage}
+        />
+      );
+    case 'businessDashboard':
+      return (
+        <BusinessDashboard
+          bookings={bookings}
+          pageHandler={setCurrentPage}
+          currentBusiness={currentBusiness}
+          setCurrDay={setCurrDay} // Pass setCurrDay here
         />
       );
     default:
