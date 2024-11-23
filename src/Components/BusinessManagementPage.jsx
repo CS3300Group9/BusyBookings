@@ -1,5 +1,6 @@
 // Components/BusinessManagementPage.js
 import React, { useState } from 'react';
+import Business from '../Business';
 
 function BusinessManagementPage({ user, businesses, setBusinesses, pageHandler }) {
   const [businessName, setBusinessName] = useState('');
@@ -22,12 +23,7 @@ function BusinessManagementPage({ user, businesses, setBusinesses, pageHandler }
     setBusinesses((prevBusinesses) => {
       const updatedBusinesses = new Map(prevBusinesses);
       const userBusinesses = updatedBusinesses.get(user.username) || [];
-      userBusinesses.push({
-        name: businessName,
-        address: address,
-        startTime: startTime,
-        endTime: endTime,
-      });
+      userBusinesses.push(new Business(businessName, address, startTime, endTime));
       updatedBusinesses.set(user.username, userBusinesses);
       return updatedBusinesses;
     });

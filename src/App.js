@@ -39,7 +39,6 @@ function App() {
 
   const [businesses, setBusinesses] = useState(new Map());
   const [loggedInUser, setLoggedInUser] = useState(null);
-  const [businessAvailabilities, setBusinessAvailabilities] = useState(new Map()); // Map<businessId, {startTime, endTime}>
 
   
 
@@ -107,6 +106,26 @@ function App() {
   const createBooking = () => {
     if (!startTime || !endTime || !name || !contactInfo || !business || !customer) {
       setError('Please fill in all fields');
+      return;
+    }
+
+    for (let [category, objects] of businesses) {
+      const selectedBusiness = objects.find(obj => obj.name === business);
+    }
+
+    if (selectedBusiness) {
+      if (selectedBusiness.startAvailableTime > startTime) {
+        setError('Start time before business is avaliable');
+        return;
+      } else if (selectedBusiness.endAvailableTime < endTime) {
+        setError('End time after business is avaliable');
+        return;
+      } else if () {
+        setError('Business does not exist');
+        return;
+      }
+    } else {
+      setError('Business does not exist');
       return;
     }
 
