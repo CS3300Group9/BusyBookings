@@ -10,7 +10,7 @@ import BusinessLandingPage from './Components/BusinessLandingPage';
 
 import BusinessDashboard from './Components/BusinessDashboard'; // Import the new dashboard
 import Booking from './Booking'; // Import the booking class
-
+import Business from './Business';
 import BusinessManagementPage from './Components/BusinessManagementPage';
 
 function App() {
@@ -40,7 +40,6 @@ function App() {
   const [businesses, setBusinesses] = useState(new Map());
   const [loggedInUser, setLoggedInUser] = useState(null);
   const [businessAvailabilities, setBusinessAvailabilities] = useState(new Map()); // Map<businessId, {startTime, endTime}>
-
 
   
 
