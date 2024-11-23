@@ -4,6 +4,8 @@ import React, { useState } from 'react';
 import LoginPage from './Components/LoginPage';
 import InitialPage from './Components/InitialPage';
 import CreateAccountPage from './Components/CreateAccountPage';
+import CreateBookingsPage from './Components/CreateBookingsPage';
+import Calendar from './Calendar';
 import LandingPage from './Components/LandingPage';
 import BusinessLandingPage from './Components/BusinessLandingPage';
 import BusinessDashboard from './Components/BusinessDashboard'; // Import the new dashboard
@@ -11,13 +13,20 @@ import booking from './Booking'; // Import the booking class
 
 function App() {
   const [currentPage, setCurrentPage] = useState('initial');
+  const [error, setError] = useState('');
+
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+
+  const [startTime, setStartTime] = useState(0);
+  const [endTime, setEndTime] = useState(0);
+  const [currentDay, setCurrDay] = useState(0);
   const [userType, setUserType] = useState('customer');
   const [error, setError] = useState('');
 
   // TEMPORARY UNTIL DB MADE
   const [users, setUsers] = useState(new Map());
+  const [bookings, setBookings] = useState(new Map());
 
   // Mock bookings for the Business Dashboard
   const [bookings] = useState([
@@ -95,6 +104,23 @@ function App() {
     setCurrentPage('initial');
   };
 
+  const createBooking = () => {
+
+    console.log(currentDay.date.toString())
+
+    setBookings((prevBookings) => {
+      const updatedBookings = new Map(prevBookings)
+      updatedBookings.set(currentDay.date.toString(), new Booking(startTime, endTime));
+      console.log(updatedBookings)
+      return updatedBookings;
+    });
+
+    console.log(bookings.get(currentDay.date.toString()))
+    console.log(bookings)
+
+    setCurrentPage('Logged in')
+  }
+
   switch (currentPage) {
     case 'initial':
       return <InitialPage pageHandler={setCurrentPage} />;
@@ -139,12 +165,31 @@ function App() {
         />
       );
     case 'customerLanding':
-      return <LandingPage />;
+      return (
+        <div>
+          <Calendar 
+            pageHandler={setCurrentPage}
+            bookings={bookings}
+            setCurrDay={setCurrDay}
+          />
+        </div>
+      );
     case 'businessLanding':
       return (
         <BusinessLandingPage
           navigateToCustomerDashboard={() => setCurrentPage('customerDashboard')}
         />
+      );
+    case 'createBookings':
+      return (
+        <div>
+          <CreateBookingsPage 
+            createBooking={createBooking}
+            setStartTime={setStartTime}
+            setEndTime={setEndTime}
+            error={error}
+          />
+        </div>
       );
     case 'customerDashboard':
       return <BusinessDashboard bookings={bookings} />;
