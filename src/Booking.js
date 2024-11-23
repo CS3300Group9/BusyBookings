@@ -1,5 +1,8 @@
 class Booking {
+    static idCounter = 0;
+
     constructor(startTime, endTime, name, contactInfo, notes, business, customer) {
+        this.id = Booking.idCounter++;
         this.startTime = startTime;
         this.endTime = endTime;
         this.name = name;

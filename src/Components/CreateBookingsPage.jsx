@@ -70,12 +70,6 @@ function CreateBookingsPage({
           </div>
           <div>
             <input
-              placeholder="Customer ID"
-              onChange={(ev) => setCustomer(ev.target.value)}
-            />
-          </div>
-          <div>
-            <input
               type="button"
               value="Create Booking"
               onClick={createBooking}

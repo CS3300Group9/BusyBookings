@@ -7,8 +7,9 @@ import CreateBookingsPage from './Components/CreateBookingsPage';
 import Calendar from './Calendar';
 import LandingPage from './Components/LandingPage';
 import BusinessLandingPage from './Components/BusinessLandingPage';
-import BusinessDashboard from './Components/BusinessDashboard'; // Import the new dashboard
-import Booking from './Booking'; // Import the booking class
+import BusinessDashboard from './Components/BusinessDashboard';
+import Booking from './Booking';
+import UpdateBookingsPage from './Components/UpdateBookingsPage';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('initial');
@@ -27,12 +28,13 @@ function App() {
   const [currentDay, setCurrDay] = useState(0);
   const [userType, setUserType] = useState('customer');
 
+  const [selectedBooking, setSelectedBooking] = useState(null);
+
   // TEMPORARY UNTIL DB MADE
   const [users, setUsers] = useState(new Map());
   const [bookings, setBookings] = useState(new Map());
 
-  // Mock bookings for the Business Dashboard
-
+  // Handle login
   const handleLogin = (userType) => {
     if (users.has(username)) {
       const user = users.get(username);
@@ -58,6 +60,7 @@ function App() {
     }
   };
 
+  // Handle account creation
   const handleCreateAccount = (userType) => {
     if (!username || !password) {
       setError('Please fill in all fields.');
@@ -87,12 +90,13 @@ function App() {
     setCurrentPage('initial');
   };
 
+  // Create a Booking
   const createBooking = () => {
-    if (!startTime || !endTime || !name || !contactInfo || !business || !customer) {
-      setError('Please fill in all fields');
+    if (!startTime || !endTime || !name || !contactInfo || !business) {
+      setError('All required fields must be filled');
       return;
     }
-
+  
     setBookings((prevBookings) => {
       const dayKey = currentDay.date.toString();
       const newBooking = new Booking(
@@ -100,18 +104,15 @@ function App() {
         endTime,
         name,
         contactInfo,
-        notes,
+        notes || '', // Allow optional notes to default to an empty string
         business,
-        customer
       );
-
-      // If no bookings exist for the current day, create a new array
+  
       if (!prevBookings.has(dayKey)) {
         const updatedBookings = new Map(prevBookings);
         updatedBookings.set(dayKey, [newBooking]);
         return updatedBookings;
       } else {
-        // Create a new array with the existing bookings and add the new booking
         const updatedBookings = new Map(prevBookings);
         const existingBookings = [...updatedBookings.get(dayKey)];
         existingBookings.push(newBooking);
@@ -119,7 +120,7 @@ function App() {
         return updatedBookings;
       }
     });
-
+  
     // Clear form fields and navigate back
     setStartTime('');
     setEndTime('');
@@ -131,6 +132,41 @@ function App() {
     setError('');
     setCurrentPage('customerLanding');
   };
+  
+  // Update a booking
+  const updateBooking = (updatedBooking) => {
+    if (!selectedBooking || !selectedBooking.date) {
+      setError('No booking selected to update.');
+      return;
+    }
+  
+    const dayKey = selectedBooking.date.toString();
+    const updatedBookings = new Map(bookings);
+    const existingBookings = updatedBookings.get(dayKey) || [];
+  
+    const updatedBookingIndex = existingBookings.findIndex(
+      (b) => b.id === updatedBooking.id // Compare by ID
+    );
+  
+    if (updatedBookingIndex !== -1) {
+      existingBookings[updatedBookingIndex] = { ...updatedBooking }; // Update booking with new values
+      updatedBookings.set(dayKey, existingBookings);
+      setBookings(updatedBookings);
+    }
+  
+    // Clear fields and reset state
+    setStartTime('');
+    setEndTime('');
+    setName('');
+    setContactInfo('');
+    setNotes('');
+    setBusiness('');
+    setSelectedBooking(null);
+    setError('');
+    setCurrentPage('customerLanding');
+  };
+  
+  
 
   switch (currentPage) {
     case 'initial':
@@ -182,6 +218,7 @@ function App() {
             pageHandler={setCurrentPage}
             bookings={bookings}
             setCurrDay={setCurrDay}
+            setSelectedBooking={setSelectedBooking}
           />
         </div>
       );
@@ -193,19 +230,32 @@ function App() {
       );
     case 'createBookings':
       return (
-        <div>
-          <CreateBookingsPage
-            createBooking={createBooking}
-            setStartTime={setStartTime}
-            setEndTime={setEndTime}
-            setName={setName}
-            setContactInfo={setContactInfo}
-            setNotes={setNotes}
-            setBusiness={setBusiness}
-            setCustomer={setCustomer}
-            error={error}
-          />
-        </div>
+        <CreateBookingsPage
+          createBooking={createBooking}
+          setStartTime={setStartTime}
+          setEndTime={setEndTime}
+          setName={setName}
+          setContactInfo={setContactInfo}
+          setNotes={setNotes}
+          setBusiness={setBusiness}
+          setCustomer={setCustomer}
+          error={error}
+        />
+      );
+    case 'updateBookings':
+      return (
+        <UpdateBookingsPage
+          updateBooking={updateBooking}
+          booking={selectedBooking}
+          setStartTime={setStartTime}
+          setEndTime={setEndTime}
+          setName={setName}
+          setContactInfo={setContactInfo}
+          setNotes={setNotes}
+          setBusiness={setBusiness}
+          setCustomer={setCustomer}
+          error={error}
+        />
       );
     case 'customerDashboard':
       return <BusinessDashboard bookings={bookings} />;
