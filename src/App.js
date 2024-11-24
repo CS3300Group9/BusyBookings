@@ -1,5 +1,6 @@
 import './App.css';
 import React, { useState } from 'react';
+import axios from "axios";
 import LoginPage from './Components/LoginPage';
 import InitialPage from './Components/InitialPage';
 import CreateAccountPage from './Components/CreateAccountPage';
@@ -14,6 +15,7 @@ import Booking from './Booking'; // Import the booking class
 function App() {
   const [currentPage, setCurrentPage] = useState('initial');
   const [error, setError] = useState('');
+  
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -35,13 +37,43 @@ function App() {
 
   const [bookings, setBookings] = useState(new Map());
 
+  //DATABASE API
+
+
   // Mock bookings for the Business Dashboard
 
   // CHANGE ME FOR SQL DB
-  const handleLogin = () => {
+  const handleLogin = async() => {
+    /*
+    //DATABASE VALIDATE CALL
+        //CHECK DATABASE FOR USER
+        async function checkUser(x) {
+          return await axios
+         .get("http://localhost:3001/user/" + x)
+         }
+     
+         try {
+             const response = await checkUser(username);
+             if (!response.data){
+                setError('Username does not exist. Please create an account.');
+                return;
+              }
+        } catch (error) {
+             setError(error.toString());
+         }
+    
+    async function validate(x, y) {
+      console.log("http://localhost:3001/validate/" + x + "/" + y)
+      return await axios
+      .get("http://localhost:3001/validate/" + x + "/" + y)
+    }
+    const response = await validate(username, password);*/
+
+    //LOGIC
     if (users.has(username)) {
       const user = users.get(username);
-      if (user.password === password) {
+      //if (user.password === password) {
+        if (response) {
         if (user.userType === userType) {
           setError('');
           setUsername('');
@@ -63,7 +95,7 @@ function App() {
     }
   };
 
-  const handleCreateAccount = (userType) => {
+  const handleCreateAccount = async(userType) => {
     if (!username || !password) {
       setError('Please fill in all fields.');
       return;
@@ -74,12 +106,31 @@ function App() {
       return;
     }
 
-    if (users.has(username)) {
-      setError('Username already exists. Please choose a different one.');
-      return;
-    }
+    //CHECK DATABASE FOR USER
+    async function checkUser(x) {
+      return await axios
+     .get("http://localhost:3001/user/" + x)
+     }
+ 
+     try {
+         const response = await checkUser(username);
+         if (response.data){
+            setError('Username already exists. Please choose a different one.');
+            return;
+          }
+    } catch (error) {
+         setError(error.toString());
+     }
 
-    setUsers((prevUsers) => {
+    
+    //DATABASE CALL
+    async function postUser(x, y, z){
+      console.log('http://localhost:3001/addUser/' + x + '/' + y + '/' + z);
+      axios.post('http://localhost:3001/addUser/' + x + '/' + y + '/' + z)
+    }
+    postUser(username, password, "customer")
+
+    /*setUsers((prevUsers) => {
       const updatedUsers = new Map(prevUsers);
       updatedUsers.set(username, { password, userType });
       return updatedUsers;
@@ -87,7 +138,7 @@ function App() {
 
     setUsername('');
     setPassword('');
-    setUserType('customer');
+    setUserType('customer');*/
     setError('');
     setCurrentPage('initial');
   };
