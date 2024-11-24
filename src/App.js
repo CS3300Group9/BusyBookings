@@ -9,8 +9,11 @@ import CreateBookingsPage from './Components/CreateBookingsPage';
 import Calendar from './Calendar';
 import LandingPage from './Components/LandingPage';
 import BusinessLandingPage from './Components/BusinessLandingPage';
+
 import BusinessDashboard from './Components/BusinessDashboard'; // Import the new dashboard
 import Booking from './Booking'; // Import the booking class
+import Business from './Business';
+import BusinessManagementPage from './Components/BusinessManagementPage';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('initial');
@@ -32,6 +35,7 @@ function App() {
 
   // TEMPORARY UNTIL DB MADE
   const [users, setUsers] = useState(new Map());
+
   //const db = new db_connector;
   //var con = require("./Database/connect.js");
 
@@ -79,6 +83,7 @@ function App() {
           setUsername('');
           setPassword('');
           setUserType('customer');
+          setLoggedInUser({ username, userType });
           setCurrentPage(
             userType === 'customer' ? 'customerLanding' : 'businessLanding'
           );
@@ -94,6 +99,7 @@ function App() {
       setError('Username does not exist. Please create an account.');
     }
   };
+
 
   const handleCreateAccount = async(userType) => {
     if (!username || !password) {
@@ -136,11 +142,16 @@ function App() {
       return updatedUsers;
     });
 
+    setLoggedInUser({ username, userType });
+
+
     setUsername('');
     setPassword('');
     setUserType('customer');*/
     setError('');
-    setCurrentPage('initial');
+    setCurrentPage(
+      userType === 'customer' ? 'customerLanding' : 'businessLanding'
+    );
   };
 
   const createBooking = () => {
@@ -244,7 +255,7 @@ function App() {
     case 'businessLanding':
       return (
         <BusinessLandingPage
-          navigateToCustomerDashboard={() => setCurrentPage('customerDashboard')}
+        pageHandler={setCurrentPage} // Added this line here properly
         />
       );
     case 'createBookings':
@@ -263,8 +274,22 @@ function App() {
           />
         </div>
       );
-    case 'customerDashboard':
-      return <BusinessDashboard bookings={bookings} />;
+      case 'customerDashboard':
+        return (
+          <BusinessDashboard 
+            bookings={bookings} 
+            pageHandler={setCurrentPage} // Added this line here properly
+          />
+        );      
+    case 'businessManagement':
+      return (
+        <BusinessManagementPage
+          user={loggedInUser}
+          businesses={businesses}
+          setBusinesses={setBusinesses}
+          pageHandler={setCurrentPage}
+        />
+      );
     default:
       return <InitialPage pageHandler={setCurrentPage} />;
   }

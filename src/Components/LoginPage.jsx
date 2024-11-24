@@ -16,6 +16,8 @@ function LoginPage({
 
   //NO LOGIC HERE, KEEP CLEAN
 
+//Handle both business and customer logins
+
   return (
     <div
       style={{
