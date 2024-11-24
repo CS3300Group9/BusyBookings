@@ -50,7 +50,8 @@ class db_connector {
         resolve(false);
         return;
       }
-      if(!hashed_password.localeCompare(result[1]["hashed_password"])) {
+      console.log(result)
+      if(!hashed_password.localeCompare(result[0]["hashed_password"])) {
         console.log("Found! Given:" + hashed_password + " True:" + result[0]["hashed_password"])
         resolve(true);
         return;
@@ -90,9 +91,12 @@ app.get('/validate/:name/:password', (req, res) => {
   console.log("User:" + user)
   console.log("Password:" + password)
   db.validate(user, password).then((exists) => {
+    console.log("Exists: " + exists)
     if (exists) {
+      console.log("YAY SENDING LOGIN")
       res.send(true)
     } else {
+      console.log("BOO SENDING FAILURE")
       res.send(false)
     }
   }).catch((err) => {

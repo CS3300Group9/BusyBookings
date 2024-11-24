@@ -43,12 +43,16 @@ function App() {
 
   //DATABASE API
 
-
   // Mock bookings for the Business Dashboard
+
+  const [businesses, setBusinesses] = useState(new Map());
+  const [loggedInUser, setLoggedInUser] = useState(null);
+  const [businessAvailabilities, setBusinessAvailabilities] = useState(new Map()); // Map<businessId, {startTime, endTime}>
+
 
   // CHANGE ME FOR SQL DB
   const handleLogin = async() => {
-    /*
+    
     //DATABASE VALIDATE CALL
         //CHECK DATABASE FOR USER
         async function checkUser(x) {
@@ -56,25 +60,35 @@ function App() {
          .get("http://localhost:3001/user/" + x)
          }
      
-         try {
-             const response = await checkUser(username);
-             if (!response.data){
-                setError('Username does not exist. Please create an account.');
-                return;
-              }
-        } catch (error) {
-             setError(error.toString());
-         }
-    
-    async function validate(x, y) {
-      console.log("http://localhost:3001/validate/" + x + "/" + y)
-      return await axios
-      .get("http://localhost:3001/validate/" + x + "/" + y)
-    }
-    const response = await validate(username, password);*/
 
+      const response = await checkUser(username);
+      if (!response.data){
+        setError('Username does not exist. Please create an account.');
+      } else {
+        async function validate(x, y) {
+          return await axios
+          .get("http://localhost:3001/validate/" + x + "/" + y)
+        }
+        try {
+          const validated = await validate(username, password);
+          if (validated.data) {
+            setError('');
+            setUsername('');
+            setPassword('');
+            setUserType('customer');
+            setLoggedInUser({ username, userType });
+            setCurrentPage(
+              userType === 'customer' ? 'customerLanding' : 'businessLanding'
+            );
+          } else {
+            setError('Incorrect password. Please try again.');
+          }
+        } catch (error) {
+          setError(error.toString())
+        }
+      }
     //LOGIC
-    if (users.has(username)) {
+    /*if (users.has(username)) {
       const user = users.get(username);
       //if (user.password === password) {
         if (response) {
@@ -97,7 +111,7 @@ function App() {
       }
     } else {
       setError('Username does not exist. Please create an account.');
-    }
+    }*/
   };
 
 

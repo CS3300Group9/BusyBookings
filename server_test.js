@@ -3,18 +3,17 @@ const axios = require("axios")
 async function test() {
 
     async function request(x, y) {
+        console.log("http://localhost:3001/validate/" + x + "/" + y)
         return await axios
         .get("http://localhost:3001/validate/" + x + "/" + y)
-        /*.then((response)=> {
-        const posts = response.data;
-        console.log(posts)
-        });*/
-        }
-
-
-        const response = await request("test", "password");
+    }
+    try {
+        const response = await request("Reboot", "PassyMcPassFace");
         console.log("RESPONSE")
-        //console.log(response.data)
+        console.log(response.data)
+    } catch (error) {
+        console.log(error.toString())
+    }
 
         
 }   
