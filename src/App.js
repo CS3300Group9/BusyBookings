@@ -1,5 +1,6 @@
+// App.js
 import './App.css';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import LoginPage from './Components/LoginPage';
 import InitialPage from './Components/InitialPage';
 import CreateAccountPage from './Components/CreateAccountPage';
@@ -7,11 +8,10 @@ import CreateBookingsPage from './Components/CreateBookingsPage';
 import Calendar from './Calendar';
 import LandingPage from './Components/LandingPage';
 import BusinessLandingPage from './Components/BusinessLandingPage';
-
-import BusinessDashboard from './Components/BusinessDashboard'; // Import the new dashboard
-import Booking from './Booking'; // Import the booking class
-import Business from './Business';
+import BusinessDashboard from './Components/BusinessDashboard';
+import Booking from './Booking';
 import BusinessManagementPage from './Components/BusinessManagementPage';
+import Business from './Business';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('initial');
@@ -27,21 +27,17 @@ function App() {
   const [notes, setNotes] = useState('');
   const [business, setBusiness] = useState('');
   const [customer, setCustomer] = useState('');
-  const [currentDay, setCurrDay] = useState(0);
+  const [currentDay, setCurrDay] = useState(new Date()); // Initialize as Date object
   const [userType, setUserType] = useState('customer');
-  const [currentBusiness, setCurrentBusiness] = useState(null);
 
   // TEMPORARY UNTIL DB MADE
   const [users, setUsers] = useState(new Map());
-
   const [bookings, setBookings] = useState(new Map());
-
-  // Mock bookings for the Business Dashboard
-
-  const [businesses, setBusinesses] = useState(new Map());
+  const [businesses, setBusinesses] = useState(new Map()); // Maintain as Map
   const [loggedInUser, setLoggedInUser] = useState(null);
+  const [businessAvailabilities, setBusinessAvailabilities] = useState(new Map()); // Map<businessId, {startTime, endTime}>
 
-  
+  const [currentBusiness, setCurrentBusiness] = useState(null); // Added state for currentBusiness
 
   const handleLogin = (userType) => {
     if (users.has(username)) {
@@ -69,7 +65,6 @@ function App() {
     }
   };
 
-
   const handleCreateAccount = (userType) => {
     if (!username || !password) {
       setError('Please fill in all fields.');
@@ -94,7 +89,6 @@ function App() {
 
     setLoggedInUser({ username, userType });
 
-
     setUsername('');
     setPassword('');
     setUserType('customer');
@@ -110,31 +104,29 @@ function App() {
       return;
     }
 
+    if (startTime >= endTime) {
+      setError('Start time must be before end time.');
+      return;
+    }
+
+    const dateString = currentDay ? currentDay.toDateString() : new Date().toDateString();
+
     setBookings((prevBookings) => {
-      const dayKey = currentDay.date.toString();
       const newBooking = new Booking(
         startTime,
         endTime,
         name,
         contactInfo,
         notes,
-        business.name,
+        business.name, // Ensure 'business' is an object with a 'name' property
         customer
       );
 
-      // If no bookings exist for the current day, create a new array
-      if (!prevBookings.has(dayKey)) {
-        const updatedBookings = new Map(prevBookings);
-        updatedBookings.set(dayKey, [newBooking]);
-        return updatedBookings;
-      } else {
-        // Create a new array with the existing bookings and add the new booking
-        const updatedBookings = new Map(prevBookings);
-        const existingBookings = updatedBookings.get(dayKey) || [];
-        existingBookings.push(newBooking);
-        updatedBookings.set(dayKey, existingBookings);
-        return updatedBookings;
-      }
+      const updatedBookings = new Map(prevBookings);
+      const existingBookings = updatedBookings.get(dateString) || [];
+      existingBookings.push(newBooking);
+      updatedBookings.set(dateString, existingBookings);
+      return updatedBookings;
     });
 
     // Clear form fields and navigate back
@@ -149,6 +141,64 @@ function App() {
     setCurrentPage('customerLanding');
   };
 
+  // Initialize sample businesses when the component mounts
+  useEffect(() => {
+    if (businesses.size === 0) {
+      const sampleBusinesses = [
+        new Business("Sample Business 1", "123 Main St", "09:00", "17:00"),
+        new Business("Sample Business 2", "456 Elm St", "10:00", "18:00"),
+      ];
+      const businessesMap = new Map();
+      sampleBusinesses.forEach((biz, index) => {
+        businessesMap.set(index, biz);
+      });
+      setBusinesses(businessesMap);
+    }
+  }, [businesses]);
+
+  // Initialize manual bookings once currentBusiness is set
+  useEffect(() => {
+    if (currentBusiness && bookings.size === 0) {
+      const date1 = new Date();
+      date1.setDate(date1.getDate() + 1); // Tomorrow
+      const dateKey1 = date1.toDateString();
+
+      const booking1 = new Booking(
+        "09:00",
+        "10:00",
+        "John Doe",
+        "john@example.com",
+        "First booking",
+        currentBusiness.name,
+        "Jane Customer"
+      );
+
+      const booking2 = new Booking(
+        "11:00",
+        "12:00",
+        "Alice Smith",
+        "alice@example.com",
+        "Second booking",
+        currentBusiness.name,
+        "Bob Customer"
+      );
+
+      const initialBookings = new Map();
+      initialBookings.set(dateKey1, [booking1, booking2]);
+
+      setBookings(initialBookings);
+    }
+  }, [currentBusiness, bookings]);
+
+  // Initialize a sample currentBusiness when businesses are loaded
+  useEffect(() => {
+    if (!currentBusiness && businesses.size > 0) {
+      const firstBusiness = businesses.values().next().value;
+      setCurrentBusiness(firstBusiness);
+    }
+  }, [businesses, currentBusiness]);
+
+  // Rendering components based on currentPage
   switch (currentPage) {
     case 'initial':
       return <InitialPage pageHandler={setCurrentPage} />;
@@ -200,12 +250,13 @@ function App() {
             bookings={bookings}
             setCurrDay={setCurrDay}
           />
+          {/* Add navigation or other components as needed */}
         </div>
       );
     case 'businessLanding':
       return (
         <BusinessLandingPage
-        pageHandler={setCurrentPage} // Added this line here properly
+          pageHandler={setCurrentPage} // Properly passed
         />
       );
     case 'createBookings':
@@ -224,30 +275,33 @@ function App() {
           />
         </div>
       );
-      case 'customerDashboard':
-        return (
-          <BusinessDashboard 
-            bookings={bookings} 
-            pageHandler={setCurrentPage} // Added this line here properly
-          />
-        );      
-    case 'businessManagement':
+    case 'customerDashboard':
       return (
-        <BusinessManagementPage
-          user={loggedInUser}
-          businesses={businesses}
-          setBusinesses={setBusinesses}
-          setCurrentBusiness={setCurrentBusiness}
-          pageHandler={setCurrentPage}
+        <BusinessDashboard 
+          bookings={bookings} 
+          businesses={businesses} // Pass businesses as a Map
+          pageHandler={setCurrentPage} // Properly passed
+          setCurrDay={setCurrDay} // Pass setCurrDay here
         />
       );
     case 'businessDashboard':
       return (
         <BusinessDashboard
           bookings={bookings}
+          businesses={businesses} // Pass businesses as a Map
           pageHandler={setCurrentPage}
           currentBusiness={currentBusiness}
           setCurrDay={setCurrDay} // Pass setCurrDay here
+        />
+      );
+    case 'businessManagement':
+      return (
+        <BusinessManagementPage
+          user={loggedInUser}
+          businesses={businesses}
+          setBusinesses={setBusinesses}
+          setCurrentBusiness={setCurrentBusiness} // Pass setCurrentBusiness here
+          pageHandler={setCurrentPage}
         />
       );
     default:
