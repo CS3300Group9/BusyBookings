@@ -1,5 +1,5 @@
 //npm install mysql
-export default class db_connector {
+class db_connector {
   constructor() {
     console.log('Beginning');
 

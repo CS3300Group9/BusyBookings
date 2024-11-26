@@ -1,8 +1,10 @@
 import './App.css';
 import React, { useState } from 'react';
+import axios from "axios";
 import LoginPage from './Components/LoginPage';
 import InitialPage from './Components/InitialPage';
 import CreateAccountPage from './Components/CreateAccountPage';
+//import db_connector from './Database/db_connector';
 import CreateBookingsPage from './Components/CreateBookingsPage';
 import Calendar from './Calendar';
 import LandingPage from './Components/LandingPage';
@@ -16,6 +18,7 @@ import BusinessManagementPage from './Components/BusinessManagementPage';
 function App() {
   const [currentPage, setCurrentPage] = useState('initial');
   const [error, setError] = useState('');
+  
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -33,7 +36,12 @@ function App() {
   // TEMPORARY UNTIL DB MADE
   const [users, setUsers] = useState(new Map());
 
+  //const db = new db_connector;
+  //var con = require("./Database/connect.js");
+
   const [bookings, setBookings] = useState(new Map());
+
+  //DATABASE API
 
   // Mock bookings for the Business Dashboard
 
@@ -41,12 +49,49 @@ function App() {
   const [loggedInUser, setLoggedInUser] = useState(null);
   const [businessAvailabilities, setBusinessAvailabilities] = useState(new Map()); // Map<businessId, {startTime, endTime}>
 
-  
 
-  const handleLogin = (userType) => {
-    if (users.has(username)) {
+  // CHANGE ME FOR SQL DB
+  const handleLogin = async() => {
+    
+    //DATABASE VALIDATE CALL
+        //CHECK DATABASE FOR USER
+        async function checkUser(x) {
+          return await axios
+         .get("http://localhost:3001/user/" + x)
+         }
+     
+
+      const response = await checkUser(username);
+      if (!response.data){
+        setError('Username does not exist. Please create an account.');
+      } else {
+        async function validate(x, y) {
+          return await axios
+          .get("http://localhost:3001/validate/" + x + "/" + y)
+        }
+        try {
+          const validated = await validate(username, password);
+          if (validated.data) {
+            setError('');
+            setUsername('');
+            setPassword('');
+            setUserType('customer');
+            setLoggedInUser({ username, userType });
+            setCurrentPage(
+              userType === 'customer' ? 'customerLanding' : 'businessLanding'
+            );
+          } else {
+            setError('Incorrect password. Please try again.');
+          }
+        } catch (error) {
+          setError(error.toString())
+        }
+      }
+    //LOGIC
+    /*if (users.has(username)) {
       const user = users.get(username);
-      if (user.password === password) {
+      //if (user.password === password) {
+        if (response) {
         if (user.userType === userType) {
           setError('');
           setUsername('');
@@ -66,11 +111,11 @@ function App() {
       }
     } else {
       setError('Username does not exist. Please create an account.');
-    }
+    }*/
   };
 
 
-  const handleCreateAccount = (userType) => {
+  const handleCreateAccount = async(userType) => {
     if (!username || !password) {
       setError('Please fill in all fields.');
       return;
@@ -81,12 +126,31 @@ function App() {
       return;
     }
 
-    if (users.has(username)) {
-      setError('Username already exists. Please choose a different one.');
-      return;
-    }
+    //CHECK DATABASE FOR USER
+    async function checkUser(x) {
+      return await axios
+     .get("http://localhost:3001/user/" + x)
+     }
+ 
+     try {
+         const response = await checkUser(username);
+         if (response.data){
+            setError('Username already exists. Please choose a different one.');
+            return;
+          }
+    } catch (error) {
+         setError(error.toString());
+     }
 
-    setUsers((prevUsers) => {
+    
+    //DATABASE CALL
+    async function postUser(x, y, z){
+      console.log('http://localhost:3001/addUser/' + x + '/' + y + '/' + z);
+      axios.post('http://localhost:3001/addUser/' + x + '/' + y + '/' + z)
+    }
+    postUser(username, password, "customer")
+
+    /*setUsers((prevUsers) => {
       const updatedUsers = new Map(prevUsers);
       updatedUsers.set(username, { password, userType });
       return updatedUsers;
@@ -97,7 +161,7 @@ function App() {
 
     setUsername('');
     setPassword('');
-    setUserType('customer');
+    setUserType('customer');*/
     setError('');
     setCurrentPage(
       userType === 'customer' ? 'customerLanding' : 'businessLanding'
@@ -246,3 +310,4 @@ function App() {
 }
 
 export default App;
+
