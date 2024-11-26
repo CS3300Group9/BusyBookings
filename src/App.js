@@ -360,6 +360,17 @@ function App() {
     case 'customerLanding':
       return (
         <div>
+          <div className='center'>
+            <input
+              className='buttonCustom'
+              type="button"
+              value="Log out"
+              onClick={() => {
+                setCurrentPage('intial')
+                setLoggedInUser([])
+                }}
+            />
+          </div>
           <Calendar
             pageHandler={setCurrentPage}
             bookings={bookings}
@@ -377,8 +388,17 @@ function App() {
               <input
                 className='buttonCustom'
                 type="button"
-                value="ManageBusiness"
+                value="Manage Business"
                 onClick={() => setCurrentPage('businessManagement')}
+              />
+              <input
+                className='buttonCustom'
+                type="button"
+                value="Log out"
+                onClick={() => {
+                  setCurrentPage('intial')
+                  setLoggedInUser([])
+                  }}
               />
             </div>
             <Calendar
