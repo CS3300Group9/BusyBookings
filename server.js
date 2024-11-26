@@ -25,6 +25,14 @@ class db_connector {
       });
   }
 
+  add_booking(name, contact ,start ,end ,buisness, customer, notes) {
+    console.log("Posting Booking");
+    this.con.query("INSERT INTO bookings (booking_name, contactInfo ,start_time ,end_time ,buisness, customer, notes) VALUES (\x22" + name + "\x22, \x22" + contact+ "\x22, \x22" + start + "\x22,\x22" + end + "\x22,\x22" + buisness+ "\x22,\x22" + customer +  "\x22, \x22" + notes + "\x22);", function (err, result) {
+      if (err) throw err;
+    });
+    return true;
+  }
+
    user_exists(username) {
     console.log("Checking for " + username);
     return new Promise((resolve, reject) => {
@@ -53,7 +61,32 @@ class db_connector {
           });
       });
     }
-    
+
+    listBusiness() {
+      return new Promise((resolve, reject) => {
+        this.con.query("select username from users where user_type = \x22"+ "business" +"\x22", function (err, result) {
+          console.log(JSON.stringify(result));
+          resolve(result);
+        });
+      });
+    }
+
+  customer_bookings(user) {
+    return new Promise((resolve, reject) => {
+      this.con.query("select * from bookings where customer = \x22"+ user +"\x22", function (err, result) {
+        resolve(result)
+      });
+    });
+  }
+
+  buisness_bookings(user) {
+    return new Promise((resolve, reject) => {
+      this.con.query("select * from bookings where buisness = \x22"+ user +"\x22", function (err, result) {
+        resolve(result)
+      });
+    });
+  }
+
   validate(username, hashed_password) {
     console.log("Validating")
     return new Promise((resolve, reject) => {
@@ -143,14 +176,28 @@ app.get('/user/:name', (req, res) => {
   });
 });
 
+app.get('/buisness', (req, res) => {
+  db.listBusiness().then((all_buisness) => {
+    res.send(all_buisness)
+  }).catch((err) => {
+    console.error("Error checking user: ", err);
+  });
+});
+
+
 app.get('/bookings/:name', (req, res) => {
   const user = req.params.name
-  db.user_exists(user).then((exists) => {
-    if (exists) {
-      res.send(true)
-    } else {
-      res.send(false)
-    }
+  db.customer_bookings(user).then((bookings) => {
+    res.send(bookings)
+  }).catch((err) => {
+    console.error("Error checking user: ", err);
+  });
+});
+
+app.get('/buisness-bookings/:name', (req, res) => {
+  const user = req.params.name
+  db.buisness_bookings(user).then((bookings) => {
+    res.send(bookings)
   }).catch((err) => {
     console.error("Error checking user: ", err);
   });
@@ -162,6 +209,20 @@ app.post('/addUser/:name/:password/:type',(req, res) => {
     const password = req.params.password
     const type = req.params.type
     db.add_user(user, password, type)
+    res.send("POST Request Called")
+  })
+
+app.post('/addBooking/:name/:contact/:start/:end/:buisness/:customer/:notes',(req, res) => {
+    const name = req.params.name
+    const contact = req.params.contact
+    const start = req.params.start
+    const end = req.params.end
+    const buisness = req.params.buisness
+    const customer = req.params.customer
+    const notes = req.params.notes
+    console.log("POST BOOKING");
+
+    db.add_booking(name, contact ,start ,end ,buisness, customer, notes)
     res.send("POST Request Called")
   })
 
