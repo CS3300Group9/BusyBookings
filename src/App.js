@@ -101,28 +101,28 @@ function App() {
               setCurrentPage(uType === 'customer' ? 'customerLanding' : 'businessLanding');
               if (uType === 'customer') {
                 const results = await getCustomerBookings(username);
-                console.log(results)
-                var length = Object.keys(results)?.length
+                const resultsUnique = Array.from(new Set(results.map(a => JSON.stringify(a)))).map(e => JSON.parse(e));
+                var length = Object.keys(resultsUnique)?.length
                 if (length >= 1) {
                   var i = 0;
                   var customerBookings = new Map();
                   while (i < length) {
                     var newBooking = new Booking(
-                      results[i]["start_time"],
-                      results[i]["end_time"],
-                      results[i]["booking_name"],
-                      results[i]["contactInfo"],
-                      results[i]["notes"],
-                      results[i]["buisness"],
-                      results[i]["customer"],
-                      results[i]["dates"]
+                      resultsUnique[i]["start_time"],
+                      resultsUnique[i]["end_time"],
+                      resultsUnique[i]["booking_name"],
+                      resultsUnique[i]["contactInfo"],
+                      resultsUnique[i]["notes"],
+                      resultsUnique[i]["buisness"],
+                      resultsUnique[i]["customer"],
+                      resultsUnique[i]["dates"]
                     );
-                    if (customerBookings.has(results[i]["dates"])) {
-                      var temp = [...customerBookings.get(results[i]["dates"])];
+                    if (customerBookings.has(resultsUnique[i]["dates"])) {
+                      var temp = [...customerBookings.get(resultsUnique[i]["dates"])];
                       temp.push(newBooking);
-                      customerBookings.set(results[i]["dates"], temp);
+                      customerBookings.set(resultsUnique[i]["dates"], temp);
                     } else {
-                      customerBookings.set(results[i]["dates"], [newBooking]);
+                      customerBookings.set(resultsUnique[i]["dates"], [newBooking]);
                     }
                     i++;
                   }
@@ -132,27 +132,28 @@ function App() {
                 }
               } else {
                 const results = await getBuisnessBookings(username);
-                var length = Object.keys(results)?.length
+                const resultsUnique = Array.from(new Set(results.map(a => JSON.stringify(a)))).map(e => JSON.parse(e));
+                var length = Object.keys(resultsUnique)?.length
                 if (length >= 1) {
                   var i = 0;
                   var businessBookings = new Map();
                   while (i < length) {
                     var newBooking = new Booking(
-                      results[i]["start_time"],
-                      results[i]["end_time"],
-                      results[i]["booking_name"],
-                      results[i]["contactInfo"],
-                      results[i]["notes"],
-                      results[i]["buisness"],
-                      results[i]["customer"],
-                      results[i]["dates"]
+                      resultsUnique[i]["start_time"],
+                      resultsUnique[i]["end_time"],
+                      resultsUnique[i]["booking_name"],
+                      resultsUnique[i]["contactInfo"],
+                      resultsUnique[i]["notes"],
+                      resultsUnique[i]["buisness"],
+                      resultsUnique[i]["customer"],
+                      resultsUnique[i]["dates"]
                     );
-                    if (businessBookings.has(results[i]["dates"])) {
-                      var temp = [...businessBookings.get(results[i]["dates"])];
+                    if (businessBookings.has(resultsUnique[i]["dates"])) {
+                      var temp = [...businessBookings.get(resultsUnique[i]["dates"])];
                       temp.push(newBooking);
-                      businessBookings.set(results[i]["dates"], temp);
+                      businessBookings.set(resultsUnique[i]["dates"], temp);
                     } else {
-                      businessBookings.set(results[i]["dates"], [newBooking]);
+                      businessBookings.set(resultsUnique[i]["dates"], [newBooking]);
                     }
                     i++;
                   }
