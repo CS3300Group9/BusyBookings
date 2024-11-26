@@ -1,5 +1,6 @@
 import express from 'express';
 import mysql from 'mysql'
+import cors from "cors";
 
 class db_connector {
     constructor() {
@@ -117,6 +118,7 @@ class db_connector {
 
 const app = express();
 const db = new db_connector();
+app.use(cors());
 
 app.get('/validate/:name/:password', (req, res) => {
     const user = req.params.name

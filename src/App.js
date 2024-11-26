@@ -60,10 +60,10 @@ function App() {
         //CHECK DATABASE FOR USER
       async function checkUser(x) {
           return await axios
-         .get("http://localhost:3001/user/" + x)
+         .get("https://jsserver-1056678293451.us-east5.run.app/user/" + x)
          }
-     
       const response = await checkUser(username);
+
       if (!response.data){
         setError('Username does not exist. Please create an account.');
       } else {
@@ -72,7 +72,7 @@ function App() {
   
         async function validate(x, y) {
           return await axios
-          .get("http://localhost:3001/validate/" + x + "/" + y)
+          .get("https://jsserver-1056678293451.us-east5.run.app/validate/" + x + "/" + y)
         }
         try {
           const validated = await validate(username, password);
@@ -81,9 +81,9 @@ function App() {
 
               //CHECK TYPE 
               async function type(x) {
-                console.log("http://localhost:3001/type/" + x)
+                console.log("https://jsserver-1056678293451.us-east5.run.app/type/" + x)
                 return await axios
-                .get("http://localhost:3001/type/" + x)
+                .get("https://jsserver-1056678293451.us-east5.run.app/type/" + x)
               }
 
               const actual_type = await type(username);
@@ -151,7 +151,7 @@ function App() {
     //CHECK DATABASE FOR USER
     async function checkUser(x) {
       return await axios
-     .get("http://localhost:3001/user/" + x)
+     .get("https://jsserver-1056678293451.us-east5.run.app/user/" + x)
      }
  
      try {
@@ -167,8 +167,8 @@ function App() {
     
     //DATABASE CALL
     async function postUser(x, y, z){
-      console.log('http://localhost:3001/addUser/' + x + '/' + y + '/' + z);
-      axios.post('http://localhost:3001/addUser/' + x + '/' + y + '/' + z)
+      console.log('https://jsserver-1056678293451.us-east5.run.app/addUser/' + x + '/' + y + '/' + z);
+      axios.post('https://jsserver-1056678293451.us-east5.run.app/addUser/' + x + '/' + y + '/' + z)
     }
     postUser(username, password, userType)
 
@@ -336,9 +336,9 @@ function App() {
   //Database Booking Functions
 
   //Should be able to call normally
-  async function addBookingDB(name, contact ,start ,end ,buisness, customer, notes){
-    console.log('http://localhost:3001/addBooking/' + name + '/' + contact + '/' + start + '/' + end + '/' + buisness + '/' + customer + '/' + notes + '/' + date);
-    axios.post('http://localhost:3001/addBooking/' + name + '/' + contact + '/' + start + '/' + end + '/' + buisness + '/' + customer + '/' + notes + '/' + date);
+  async function addBookingDB(name, contact ,start ,end ,buisness, customer, notes, date){
+    console.log('https://jsserver-1056678293451.us-east5.run.app/addBooking/' + name + '/' + contact + '/' + start + '/' + end + '/' + buisness + '/' + customer + '/' + notes + '/' + date);
+    axios.post('https://jsserver-1056678293451.us-east5.run.app/addBooking/' + name + '/' + contact + '/' + start + '/' + end + '/' + buisness + '/' + customer + '/' + notes + '/' + date);
   }    
   
   //3 Database Getters
@@ -355,13 +355,13 @@ function App() {
       //bookings[0]["end_time"]  
       async function getBuisnesses() {
           return await axios
-          .get("http://localhost:3001/buisness")
+          .get("https://jsserver-1056678293451.us-east5.run.app/buisness")
       }
   
       async function getCustomerBookings(user) {
           async function search(user) {
               return await axios
-              .get("http://localhost:3001/bookings/" + user)
+              .get("https://jsserver-1056678293451.us-east5.run.app/bookings/" + user)
           }
   
           const bookings = await search(user);
@@ -371,7 +371,7 @@ function App() {
       async function getBuisnessBookings(user) {
           async function search(user) {
               return await axios
-              .get("http://localhost:3001/buisness-bookings/" + user)
+              .get("https://jsserver-1056678293451.us-east5.run.app/buisness-bookings/" + user)
           }
   
           const bookings = await search(user);
