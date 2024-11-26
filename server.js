@@ -1,3 +1,12 @@
+class printDude{
+  constructor() {
+      this.user = "DUDE"
+  }
+  printer() {
+      return "YOU CAN CALL A CLASS!"
+  }
+}
+
 class db_connector {
   constructor() {
     console.log('Beginning');
@@ -202,6 +211,7 @@ app.get('/buisness-bookings/:name', (req, res) => {
     console.error("Error checking user: ", err);
   });
 });
+
 
 app.post('/addUser/:name/:password/:type',(req, res) => {
     console.log("POST");
