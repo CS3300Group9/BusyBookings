@@ -11,3 +11,100 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.calendar {
+  width: 900px;
+  height: 600px;
+  display: flex;
+  flex-direction: column;
+}
+
+.calendar-header {
+  height: 100px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.calendar-body {
+  width: 100%;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.table-header {
+  height: 100px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.weekday {
+  width: 100px;
+  text-align: center;
+}
+
+.table-content {
+  width: 100%;
+  flex-grow: 1;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.calendar-day {
+  width: 125px;
+  min-height: 75px; /* Allow dynamic height for more content */
+  display: flex;
+  flex-direction: column; /* Stack items vertically */
+  justify-content: flex-start; /* Align content to the top */
+  align-items: stretch; /* Stretch content to fit width */
+  position: relative;
+  border: 1px solid #a6a6a6;
+  padding: 5px; /* Add padding for spacing */
+  box-sizing: border-box; /* Include padding and border in size */
+  overflow-wrap: anywhere; /* Break long words anywhere */
+  word-wrap: break-word; /* Ensure proper text wrapping */
+  word-break: break-word;
+  white-space: normal; /* Allow wrapping */
+  gap: 5px; /* Add spacing between children */
+}
+
+.calendar-day:hover {
+  background-color: rgba(0, 0, 0, 0.10);
+}
+
+.calendar-day p {
+  margin: 0; /* Remove default margin */
+  padding: 0; /* Remove default padding */
+  color: #a6a6a6;
+  font-size: 0.9rem; /* Adjust font size */
+  white-space: nowrap; /* Prevent the date from wrapping */
+  overflow: hidden; /* Prevent overflowing of the date text */
+  text-overflow: ellipsis; /* Add ellipsis if text is too long */
+}
+
+.current p {
+  color: #000000;
+}
+
+.selected p {
+  color: #cc0000;
+  font-weight: bold;
+}
+
+.booking-item {
+  font-size: 0.85rem; /* Adjust size for bookings */
+  color: #555;
+  padding: 5px; /* Add padding for better readability */
+  background-color: #f9f9f9; /* Light background to separate bookings */
+  border: 1px solid #ddd; /* Add border for separation */
+  border-radius: 4px; /* Round the edges */
+  margin-top: 5px; /* Add spacing between bookings */
+  word-wrap: break-word; /* Ensure wrapping of text */
+  white-space: normal; /* Allow wrapping */
+  overflow-wrap: anywhere; /* Break long words anywhere */
+}

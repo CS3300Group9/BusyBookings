@@ -1,27 +1,44 @@
 // Components/BusinessManagemPage.js
 //THIS SHOULD ALLOW BUSINESS USERS TO CREATE BUSINESSESD
 //Management PAge
+// Components/BusinessManagementPage.js
 import React, { useState } from 'react';
 
 function BusinessManagementPage({ user, businesses, setBusinesses, pageHandler }) {
   const [businessName, setBusinessName] = useState('');
+  const [address, setAddress] = useState('');
+  const [startTime, setStartTime] = useState('09:00');
+  const [endTime, setEndTime] = useState('17:00');
   const [error, setError] = useState('');
 
   const handleCreateBusiness = () => {
-    if (!businessName) {
-      setError('Please enter a business name.');
+    if (!businessName || !address || !startTime || !endTime) {
+      setError('Please fill in all fields.');
+      return;
+    }
+
+    if (startTime >= endTime) {
+      setError('Start time must be before end time.');
       return;
     }
 
     setBusinesses((prevBusinesses) => {
       const updatedBusinesses = new Map(prevBusinesses);
       const userBusinesses = updatedBusinesses.get(user.username) || [];
-      userBusinesses.push({ name: businessName });
+      userBusinesses.push({
+        name: businessName,
+        address: address,
+        startTime: startTime,
+        endTime: endTime,
+      });
       updatedBusinesses.set(user.username, userBusinesses);
       return updatedBusinesses;
     });
 
     setBusinessName('');
+    setAddress('');
+    setStartTime('09:00');
+    setEndTime('17:00');
     setError('');
   };
 
@@ -33,12 +50,48 @@ function BusinessManagementPage({ user, businesses, setBusinesses, pageHandler }
 
       <div>
         <h2>Create a New Business</h2>
-        <input
-          type="text"
-          placeholder="Business Name"
-          value={businessName}
-          onChange={(e) => setBusinessName(e.target.value)}
-        />
+        <div>
+          <label>
+            Business Name:
+            <input
+              type="text"
+              placeholder="Business Name"
+              value={businessName}
+              onChange={(e) => setBusinessName(e.target.value)}
+            />
+          </label>
+        </div>
+        <div>
+          <label>
+            Address:
+            <input
+              type="text"
+              placeholder="Business Address"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+            />
+          </label>
+        </div>
+        <div>
+          <label>
+            Start Time:
+            <input
+              type="time"
+              value={startTime}
+              onChange={(e) => setStartTime(e.target.value)}
+            />
+          </label>
+        </div>
+        <div>
+          <label>
+            End Time:
+            <input
+              type="time"
+              value={endTime}
+              onChange={(e) => setEndTime(e.target.value)}
+            />
+          </label>
+        </div>
         <button onClick={handleCreateBusiness}>Create Business</button>
         {error && <div style={{ color: 'red' }}>{error}</div>}
       </div>
@@ -48,7 +101,13 @@ function BusinessManagementPage({ user, businesses, setBusinesses, pageHandler }
         {userBusinesses.length > 0 ? (
           <ul>
             {userBusinesses.map((business, index) => (
-              <li key={index}>{business.name}</li>
+              <li key={index}>
+                <strong>{business.name}</strong>
+                <div>Address: {business.address}</div>
+                <div>
+                  Availability: {business.startTime} - {business.endTime}
+                </div>
+              </li>
             ))}
           </ul>
         ) : (
