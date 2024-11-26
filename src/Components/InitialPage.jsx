@@ -1,9 +1,14 @@
+import '../index.css'
+
 function InitialPage({pageHandler, loginTypeHandler}) {
     return (
-        <div className="App">
-            <h1>Busy Bookings</h1>
+      <div className="blueContainer">
+        <div className="mainBox">
+          <div className="App">
+          <h1>Busy Bookings</h1>
             <div className="App-title">Select user type</div>
             <input
+              className='buttonCustom'
               type="button"
               value="I am a customer"
               onClick={() => {
@@ -13,13 +18,16 @@ function InitialPage({pageHandler, loginTypeHandler}) {
             />
             <input
               type="button"
+              className='buttonCustom'
               value="I am a business"
               onClick={() => {
                 pageHandler('businessLogin')
                 loginTypeHandler('business')
               }}
             />
+          </div>
         </div>
+      </div>
     );
 }
 

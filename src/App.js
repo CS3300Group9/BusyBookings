@@ -372,12 +372,13 @@ function App() {
       return (
         <div>
           <div>
-            <div>
-            <input
-              type="button"
-              value="ManageBusiness"
-              onClick={() => setCurrentPage('businessManagement')}
-            />
+            <div className='center'>
+              <input
+                className='buttonCustom'
+                type="button"
+                value="ManageBusiness"
+                onClick={() => setCurrentPage('businessManagement')}
+              />
             </div>
             <Calendar
               pageHandler={setCurrentPage}

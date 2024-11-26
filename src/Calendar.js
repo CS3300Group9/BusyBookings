@@ -29,31 +29,35 @@ export default class Calendar extends Component {
     
   render() {
     return (
-      <div className="calendar">
-      <div className="calendar-header">
-        <h2>
-          {this.months[this.state.currentDay.getMonth()]}{" "}
-          {this.state.currentDay.getFullYear()}
-        </h2>
-      </div>
-      <div className="calendar-body">
-        <div className="table-header">
-          {this.weekdays.map((weekday) => {
-            return (
-              <div key={weekday} className="weekday">
-                <p>{weekday}</p>
+      <div>
+        <div className='center'>
+          <div className="calendar">
+            <div className="calendar-header">
+              <h2>
+                {this.months[this.state.currentDay.getMonth()]}{" "}
+                {this.state.currentDay.getFullYear()}
+              </h2>
+            </div>
+            <div className="calendar-body">
+              <div className="table-header">
+                {this.weekdays.map((weekday) => {
+                  return (
+                    <div key={weekday} className="weekday">
+                      <p>{weekday}</p>
+                    </div>
+                  );
+                })}
               </div>
-            );
-          })}
+              <CalendarDays
+                day={this.state.currentDay}
+                handleCalendarDayClick={this.handleCalendarDayClick}
+                handleBookingClick={this.handleBookingClick} // Pass the new handler
+                bookings={this.props.bookings}
+              />
+            </div>
+          </div>
         </div>
-        <CalendarDays
-          day={this.state.currentDay}
-          handleCalendarDayClick={this.handleCalendarDayClick}
-          handleBookingClick={this.handleBookingClick} // Pass the new handler
-          bookings={this.props.bookings}
-        />
       </div>
-    </div>
     )
   }
 }
