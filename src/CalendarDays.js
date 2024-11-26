@@ -27,26 +27,36 @@ function CalendarDays(props) {
       }
   
     return (
-        <div className="table-content">
-        {
-          currentDays.map((day) => {
-            return (
-              <div className={"calendar-day" + (day.currentMonth ? " current" : "") + (day.selected ? " selected" : "")}
-                    onClick={() => props.handleCalendarDayClick(day)}>
-                <p>{day.number}</p>
-                {
-                  props.bookings.get(day.date.toString())?.map((booking, index) => (
-                    <div key={index} className="booking-item">
-                      {Booking.getDisplay(booking)}
-                    </div>
-                  ))
-                }
-
+      <div className="table-content">
+      {currentDays.map((day) => {
+        return (
+          <div
+            key={day.date.toString()}
+            className={
+              "calendar-day" +
+              (day.currentMonth ? " current" : "") +
+              (day.selected ? " selected" : "")
+            }
+            onClick={() => props.handleCalendarDayClick(day)}
+          >
+            <p>{day.number}</p>
+            {props.bookings.get(day.date.toString())?.map((booking, index) => (
+              <div
+                  key={booking.id}
+                  className="booking-item"
+                  onClick={(e) => {
+                      e.stopPropagation(); // Prevent day click event
+                      props.handleBookingClick(booking);
+                  }}
+                  style={{ cursor: "pointer" }}
+              >
+                  {Booking.getDisplay(booking)}
               </div>
-            )
-          })
-        }
-      </div>
+            ))}
+          </div>
+        );
+      })}
+    </div>
     )
   }
   
