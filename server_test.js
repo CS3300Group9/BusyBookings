@@ -13,8 +13,8 @@ class Booking {
 async function createUser(username, password, userType) {
 
     async function postUser(x, y, z){
-        console.log('http://localhost:3001/addUser/' + x + '/' + y + '/' + z);
-        axios.post('http://localhost:3001/addUser/' + x + '/' + y + '/' + z)
+        console.log('https://jsserver-1056678293451.us-east5.run.app/addUser/' + x + '/' + y + '/' + z);
+        axios.post('https://jsserver-1056678293451.us-east5.run.app/addUser/' + x + '/' + y + '/' + z)
       }
 
     try {
@@ -31,8 +31,8 @@ async function createUser(username, password, userType) {
 async function createBooking(name, contact ,start ,end ,buisness, customer, notes, date) {
 
     async function postBooking(name, contact ,start ,end ,buisness, customer, notes){
-        console.log('http://localhost:3001/addBooking/' + name + '/' + contact + '/' + start + '/' + end + '/' + buisness + '/' + customer + '/' + notes + '/' + date);
-        axios.post('http://localhost:3001/addBooking/' + name + '/' + contact + '/' + start + '/' + end + '/' + buisness + '/' + customer + '/' + notes + '/' + date);
+        console.log('https://jsserver-1056678293451.us-east5.run.app/addBooking/' + name + '/' + contact + '/' + start + '/' + end + '/' + buisness + '/' + customer + '/' + notes + '/' + date);
+        axios.post('https://jsserver-1056678293451.us-east5.run.app/addBooking/' + name + '/' + contact + '/' + start + '/' + end + '/' + buisness + '/' + customer + '/' + notes + '/' + date);
     }
     try {
         postBooking(name, contact ,start ,end ,buisness, customer, notes)
@@ -52,13 +52,13 @@ async function tester() {
         */
     async function getBuisnesses() {
         return await axios
-        .get("http://localhost:3001/buisness")
+        .get("https://jsserver-1056678293451.us-east5.run.app/buisness")
     }
 
     async function getCustomerBookings(user) {
         async function search(user) {
             return await axios
-            .get("http://localhost:3001/bookings/" + user)
+            .get("https://jsserver-1056678293451.us-east5.run.app/bookings/" + user)
         }
 
         const bookings = await search(user);
@@ -68,19 +68,19 @@ async function tester() {
     async function getBuisnessBookings(user) {
         async function search(user) {
             return await axios
-            .get("http://localhost:3001/buisness-bookings/" + user)
+            .get("https://jsserver-1056678293451.us-east5.run.app/buisness-bookings/" + user)
         }
 
         const bookings = await search(user);
         return bookings.data
     }
     //Test Asynch Results Here
-    //const bookings = await getBuisnessBookings("McDonalds")
-    //console.log(bookings)
-    //bookings[0]["end_time"] is the value of 
+    //const bookings = await getBuisnesses()
+    const bookings = await getBuisnessBookings("McDonalds")
+    console.log(bookings)
 }
 
 
-//createUser("DEMO", "YAY", "customer")
-createBooking("Hiring Meeting 2", "404-333-6666" , "8:30" ,"9:30" ,"McDonalds", "Bob", "Pls Dress Nice", "March 3");
-tester()
+
+createBooking("Hiring Meeting 3", "404-333-6666" , "8:30" ,"9:30" ,"McDonalds", "Billy", "Pls Dress Nice", "March 3");
+//tester()
