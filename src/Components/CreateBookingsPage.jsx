@@ -7,75 +7,65 @@ function CreateBookingsPage({
   setNotes,
   setBusiness,
   setCustomer,
+  businesses,
+  business,
   error,
 }) {
+  console.log(businesses)
   return (
-    <div
-      style={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}
-    >
-      <div
-        style={{
-          border: '1px solid #ccc',
-          borderRadius: '5px',
-          padding: '16px',
-          margin: '16px',
-          boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-          maxWidth: '30%',
-          alignItems: 'center',
-        }}
-      >
+    <div className="blueContainer">
+      <div className="mainBox">
         <div className="App">
           <div>
             <h1 className="App-title">Create Booking</h1>
           </div>
           <div>
             <input
+              className='textCustom'
               placeholder="Start Time"
               onChange={(ev) => setStartTime(ev.target.value)}
             />
           </div>
           <div>
             <input
+              className='textCustom'
               placeholder="End Time"
               onChange={(ev) => setEndTime(ev.target.value)}
             />
           </div>
           <div>
             <input
+              className='textCustom'
               placeholder="Customer Name"
               onChange={(ev) => setName(ev.target.value)}
             />
           </div>
           <div>
             <input
+              className='textCustom'
               placeholder="Contact Info"
               onChange={(ev) => setContactInfo(ev.target.value)}
             />
           </div>
           <div>
             <input
+              className='textCustom'
               placeholder="Notes"
               onChange={(ev) => setNotes(ev.target.value)}
             />
           </div>
           <div>
-            <input
-              placeholder="Business Name"
-              onChange={(ev) => setBusiness(ev.target.value)}
-            />
+          <select value={business} onChange={(ev) => setBusiness(ev.target.value)} className="buttonCustom">
+            {businesses.map((option, index) => (
+              <option key={index} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
           </div>
           <div>
             <input
-              placeholder="Customer ID"
-              onChange={(ev) => setCustomer(ev.target.value)}
-            />
-          </div>
-          <div>
-            <input
+              className='buttonCustom'
               type="button"
               value="Create Booking"
               onClick={createBooking}

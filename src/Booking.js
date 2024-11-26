@@ -1,5 +1,5 @@
 class Booking {
-    constructor(startTime, endTime, name, contactInfo, notes, business, customer) {
+    constructor(startTime, endTime, name, contactInfo, notes, business, customer, date) {
         this.startTime = startTime;
         this.endTime = endTime;
         this.name = name;
@@ -7,6 +7,7 @@ class Booking {
         this.notes = notes;
         this.business = business;
         this.customer = customer;
+        this.date = date;
     }
 
     static getDisplay(bookingInstance) {
@@ -16,7 +17,7 @@ class Booking {
             return (
                 <div className="booking-display">
                     <p><strong>Time:</strong> {bookingInstance.startTime} to {bookingInstance.endTime}</p>
-                    <p><strong>Customer:</strong> {bookingInstance.customer}</p>
+                    <p><strong>Customer:</strong> {bookingInstance.name}</p>
                     <p><strong>Business:</strong> {bookingInstance.business}</p>
                     {bookingInstance.notes && (
                         <p><strong>Notes:</strong> {bookingInstance.notes}</p>
