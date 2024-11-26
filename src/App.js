@@ -332,6 +332,53 @@ function App() {
     default:
       return <InitialPage pageHandler={setCurrentPage} />;
   }
+
+
+  //Database Booking Functions
+
+  //Should be able to call normally
+  async function addBookingDB(name, contact ,start ,end ,buisness, customer, notes){
+    console.log('http://localhost:3001/addBooking/' + name + '/' + contact + '/' + start + '/' + end + '/' + buisness + '/' + customer + '/' + notes);
+    axios.post('http://localhost:3001/addBooking/' + name + '/' + contact + '/' + start + '/' + end + '/' + buisness + '/' + customer + '/' + notes);
+  }    
+  
+  //3 Database Getters
+
+  //TO GET DATA FROM THESE GETTERS YOU WILL HAVE TO USE AWAIT AS FOLLOWS WHEN YOU CALL THIS FUNCTION 
+  //IN EXAMPLE BELOW CALLING GET BUISNESSES result_list.data WILL HOLD A JSON WITH ALL BUISNESSES
+        /*
+        const result_list = await getBuisnesses();
+        */
+
+  //RETURNS - All 3 functions will return JSONs, the 
+    // For example if I want to know the end time of McDonalds first booking I would use the function in the following way
+      //const bookings = await getBuisnessBookings("McDonalds")
+      //bookings[0]["end_time"]  
+      async function getBuisnesses() {
+          return await axios
+          .get("http://localhost:3001/buisness")
+      }
+  
+      async function getCustomerBookings(user) {
+          async function search(user) {
+              return await axios
+              .get("http://localhost:3001/bookings/" + user)
+          }
+  
+          const bookings = await search(user);
+          return bookings.data
+      }
+  
+      async function getBuisnessBookings(user) {
+          async function search(user) {
+              return await axios
+              .get("http://localhost:3001/buisness-bookings/" + user)
+          }
+  
+          const bookings = await search(user);
+          return bookings.data
+      }
+
 }
 
 export default App;
