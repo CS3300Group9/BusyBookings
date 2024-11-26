@@ -254,6 +254,9 @@ function App() {
     setPassword('');
     setUserType('customer');*/
     setError('');
+    getBuisnesses().then(response => {
+      setBusinesses(response.data.map(object => object.username))
+    })
     setCurrentPage(
       userType === 'customer' ? 'customerLanding' : 'businessLanding'
     );
