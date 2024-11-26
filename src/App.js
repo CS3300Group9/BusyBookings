@@ -9,6 +9,8 @@ import CreateBookingsPage from './Components/CreateBookingsPage';
 import Calendar from './Calendar';
 import LandingPage from './Components/LandingPage';
 import BusinessLandingPage from './Components/BusinessLandingPage';
+import BusinessManagementPage from './Components/BusinessManagementPage';
+
 
 import BusinessDashboard from './Components/BusinessDashboard'; // Import the new dashboard
 import Booking from './Booking'; // Import the booking class
@@ -35,6 +37,10 @@ function App() {
 
   // TEMPORARY UNTIL DB MADE
   const [users, setUsers] = useState(new Map());
+  const [businesses, setBusinesses] = useState(new Map());
+  const [loggedInUser, setLoggedInUser] = useState(null);
+
+  
 
   //const db = new db_connector;
   //var con = require("./Database/connect.js");
@@ -113,6 +119,7 @@ function App() {
       setError('Username does not exist. Please create an account.');
     }*/
   };
+
 
 
   const handleCreateAccount = async(userType) => {
@@ -210,7 +217,9 @@ function App() {
     setBusiness('');
     setCustomer('');
     setError('');
-    setCurrentPage('customerLanding');
+    setCurrentPage(
+      userType === 'customer' ? 'customerLanding' : 'businessLanding'
+    );
   };
 
   switch (currentPage) {
@@ -269,7 +278,7 @@ function App() {
     case 'businessLanding':
       return (
         <BusinessLandingPage
-        pageHandler={setCurrentPage} // Added this line here properly
+          pageHandler={setCurrentPage} // Add this line
         />
       );
     case 'createBookings':
