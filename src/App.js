@@ -50,42 +50,58 @@ function App() {
   //DATABASE API
 
   // Mock bookings for the Business Dashboard
+  //Map of strings (date to object list)
 
-  const [businesses, setBusinesses] = useState(new Map());
-  const [loggedInUser, setLoggedInUser] = useState(null);
   const [businessAvailabilities, setBusinessAvailabilities] = useState(new Map()); // Map<businessId, {startTime, endTime}>
 
 
   // CHANGE ME FOR SQL DB
   const handleLogin = async() => {
-    
     //DATABASE VALIDATE CALL
         //CHECK DATABASE FOR USER
-        async function checkUser(x) {
+      async function checkUser(x) {
           return await axios
          .get("http://localhost:3001/user/" + x)
          }
      
-
       const response = await checkUser(username);
       if (!response.data){
         setError('Username does not exist. Please create an account.');
       } else {
+        //CHECK FOR TYPE 
+
+  
         async function validate(x, y) {
           return await axios
           .get("http://localhost:3001/validate/" + x + "/" + y)
         }
         try {
           const validated = await validate(username, password);
+
           if (validated.data) {
-            setError('');
-            setUsername('');
-            setPassword('');
-            setUserType('customer');
-            setLoggedInUser({ username, userType });
-            setCurrentPage(
-              userType === 'customer' ? 'customerLanding' : 'businessLanding'
-            );
+
+              //CHECK TYPE 
+              async function type(x) {
+                console.log("http://localhost:3001/type/" + x)
+                return await axios
+                .get("http://localhost:3001/type/" + x)
+              }
+
+              const actual_type = await type(username);
+            if (actual_type.data == userType) {
+              setError('');
+              setUsername('');
+              setPassword('');
+              setUserType('customer');
+              setLoggedInUser({ username, userType });
+              setCurrentPage(
+                userType === 'customer' ? 'customerLanding' : 'businessLanding'
+              );
+            } else {
+              setError(
+                `This account is registered as a `+ actual_type.data + `, not a `+ userType + `.`
+              );
+            }
           } else {
             setError('Incorrect password. Please try again.');
           }
@@ -155,7 +171,7 @@ function App() {
       console.log('http://localhost:3001/addUser/' + x + '/' + y + '/' + z);
       axios.post('http://localhost:3001/addUser/' + x + '/' + y + '/' + z)
     }
-    postUser(username, password, "customer")
+    postUser(username, password, userType)
 
     /*setUsers((prevUsers) => {
       const updatedUsers = new Map(prevUsers);

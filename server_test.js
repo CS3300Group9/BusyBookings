@@ -2,13 +2,13 @@ const axios = require("axios")
 
 async function test() {
 
-    async function request(x, y) {
-        console.log("http://localhost:3001/validate/" + x + "/" + y)
+    async function type(x) {
+        console.log("http://localhost:3001/type/" + x)
         return await axios
-        .get("http://localhost:3001/validate/" + x + "/" + y)
+        .get("http://localhost:3001/type/" + x)
     }
     try {
-        const response = await request("Reboot", "PassyMcPassFace");
+        const response = await type("Reboot");
         console.log("RESPONSE")
         console.log(response.data)
     } catch (error) {
