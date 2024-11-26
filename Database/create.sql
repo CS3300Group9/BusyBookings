@@ -12,6 +12,7 @@ CREATE TABLE bookings (
     end_time VARCHAR(255),
     buisness VARCHAR(255),
     customer VARCHAR(255),
-    notes VARCHAR(255)
+    notes VARCHAR(255),
+    dates VARCHAR(255)
 ); 
 
