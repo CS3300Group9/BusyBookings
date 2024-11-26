@@ -15,7 +15,6 @@ import BusinessManagementPage from './Components/BusinessManagementPage';
 import BusinessDashboard from './Components/BusinessDashboard'; // Import the new dashboard
 import Booking from './Booking'; // Import the booking class
 import Business from './Business';
-import BusinessManagementPage from './Components/BusinessManagementPage';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('initial');
