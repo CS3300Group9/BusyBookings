@@ -338,8 +338,8 @@ function App() {
 
   //Should be able to call normally
   async function addBookingDB(name, contact ,start ,end ,buisness, customer, notes){
-    console.log('http://localhost:3001/addBooking/' + name + '/' + contact + '/' + start + '/' + end + '/' + buisness + '/' + customer + '/' + notes);
-    axios.post('http://localhost:3001/addBooking/' + name + '/' + contact + '/' + start + '/' + end + '/' + buisness + '/' + customer + '/' + notes);
+    console.log('http://localhost:3001/addBooking/' + name + '/' + contact + '/' + start + '/' + end + '/' + buisness + '/' + customer + '/' + notes + '/' + date);
+    axios.post('http://localhost:3001/addBooking/' + name + '/' + contact + '/' + start + '/' + end + '/' + buisness + '/' + customer + '/' + notes + '/' + date);
   }    
   
   //3 Database Getters

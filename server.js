@@ -25,9 +25,9 @@ class db_connector {
       });
   }
 
-  add_booking(name, contact ,start ,end ,buisness, customer, notes) {
+  add_booking(name, contact ,start ,end ,buisness, customer, notes, date) {
     console.log("Posting Booking");
-    this.con.query("INSERT INTO bookings (booking_name, contactInfo ,start_time ,end_time ,buisness, customer, notes) VALUES (\x22" + name + "\x22, \x22" + contact+ "\x22, \x22" + start + "\x22,\x22" + end + "\x22,\x22" + buisness+ "\x22,\x22" + customer +  "\x22, \x22" + notes + "\x22);", function (err, result) {
+    this.con.query("INSERT INTO bookings (booking_name, contactInfo ,start_time ,end_time ,buisness, customer, notes, dates) VALUES (\x22" + name + "\x22, \x22" + contact+ "\x22, \x22" + start + "\x22,\x22" + end + "\x22,\x22" + buisness+ "\x22,\x22" + customer +  "\x22, \x22" + notes + "\x22, \x22" + date + "\x22);", function (err, result) {
       if (err) throw err;
     });
     return true;
@@ -212,7 +212,7 @@ app.post('/addUser/:name/:password/:type',(req, res) => {
     res.send("POST Request Called")
   })
 
-app.post('/addBooking/:name/:contact/:start/:end/:buisness/:customer/:notes',(req, res) => {
+app.post('/addBooking/:name/:contact/:start/:end/:buisness/:customer/:notes/:date',(req, res) => {
     const name = req.params.name
     const contact = req.params.contact
     const start = req.params.start
@@ -220,9 +220,10 @@ app.post('/addBooking/:name/:contact/:start/:end/:buisness/:customer/:notes',(re
     const buisness = req.params.buisness
     const customer = req.params.customer
     const notes = req.params.notes
+    const date = req.params.date
     console.log("POST BOOKING");
 
-    db.add_booking(name, contact ,start ,end ,buisness, customer, notes)
+    db.add_booking(name, contact ,start ,end ,buisness, customer, notes, date)
     res.send("POST Request Called")
   })
 

@@ -28,11 +28,11 @@ async function createUser(username, password, userType) {
         
 }   
 
-async function createBooking(name, contact ,start ,end ,buisness, customer, notes) {
+async function createBooking(name, contact ,start ,end ,buisness, customer, notes, date) {
 
     async function postBooking(name, contact ,start ,end ,buisness, customer, notes){
-        console.log('http://localhost:3001/addBooking/' + name + '/' + contact + '/' + start + '/' + end + '/' + buisness + '/' + customer + '/' + notes);
-        axios.post('http://localhost:3001/addBooking/' + name + '/' + contact + '/' + start + '/' + end + '/' + buisness + '/' + customer + '/' + notes);
+        console.log('http://localhost:3001/addBooking/' + name + '/' + contact + '/' + start + '/' + end + '/' + buisness + '/' + customer + '/' + notes + '/' + date);
+        axios.post('http://localhost:3001/addBooking/' + name + '/' + contact + '/' + start + '/' + end + '/' + buisness + '/' + customer + '/' + notes + '/' + date);
     }
     try {
         postBooking(name, contact ,start ,end ,buisness, customer, notes)
@@ -76,11 +76,11 @@ async function tester() {
     }
     //Test Asynch Results Here
     //const bookings = await getBuisnessBookings("McDonalds")
-    console.log(bookings)
+    //console.log(bookings)
     //bookings[0]["end_time"] is the value of 
 }
 
 
 //createUser("DEMO", "YAY", "customer")
-//createBooking("Hiring Meeting", "404-333-6666" , "8:30" ,"9:30" ,"McDonalds", "John", "Pls Dress Nice");
+createBooking("Hiring Meeting 2", "404-333-6666" , "8:30" ,"9:30" ,"McDonalds", "Bob", "Pls Dress Nice", "March 3");
 tester()
