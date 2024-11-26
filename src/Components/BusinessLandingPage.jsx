@@ -1,6 +1,6 @@
 import React from 'react';
 
-function BusinessLandingPage({ pageHandler, navigateToCustomerDashboard }) {
+function BusinessLandingPage({ pageHandler, bookings, setCurrDay }) {
   return (
     <div>
       <h1>Welcome to the Business Landing Page</h1>

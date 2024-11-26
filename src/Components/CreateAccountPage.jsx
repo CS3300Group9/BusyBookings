@@ -1,5 +1,6 @@
 // Components/CreateAccountPage.js
 import React from 'react';
+import '../index.css'
 
 function CreateAccountPage({
   pageHandler,
@@ -15,24 +16,8 @@ function CreateAccountPage({
   // NO LOGIC HERE, KEEP CLEAN
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}
-    >
-      <div
-        style={{
-          border: '1px solid #ccc',
-          borderRadius: '5px',
-          padding: '16px',
-          margin: '16px',
-          boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-          maxWidth: '30%',
-          alignItems: 'center',
-        }}
-      >
+    <div className='blueContainer'>
+      <div className='mainBox'>
         <div className="App">
           <div>
             <h1 className="App-title">Busy Bookings</h1>
@@ -42,6 +27,7 @@ function CreateAccountPage({
           </div>
           <div>
             <input
+              className='textCustom'
               placeholder="Enter username"
               value={username}
               onChange={(ev) => setUsername(ev.target.value)}
@@ -49,6 +35,7 @@ function CreateAccountPage({
           </div>
           <div>
             <input
+              className='textCustom'
               type="password"
               placeholder="Enter password here"
               value={password}
@@ -58,7 +45,7 @@ function CreateAccountPage({
           <div>
             <label>
               Account Type:
-              <select value={userType} onChange={(e) => setUserType(e.target.value)}>
+              <select value={userType} onChange={(e) => setUserType(e.target.value)} className='buttonCustom'>
                 <option value="customer">Customer</option>
                 <option value="business">Business</option>
               </select>
@@ -66,6 +53,7 @@ function CreateAccountPage({
           </div>
           <div>
             <input
+              className='buttonCustom'
               type="button"
               value="Create Account"
               onClick={() => createAccountHandler(userType)}
@@ -77,6 +65,7 @@ function CreateAccountPage({
           </div>
           <div>
             <input
+              className='buttonCustom'
               type="button"
               value="Log in"
               onClick={() => pageHandler('initial')}

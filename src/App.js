@@ -10,6 +10,7 @@ import Calendar from './Calendar';
 import LandingPage from './Components/LandingPage';
 import BusinessLandingPage from './Components/BusinessLandingPage';
 import BusinessManagementPage from './Components/BusinessManagementPage';
+import ViewBookingPage from './Components/ViewBookingPage';
 
 
 import BusinessDashboard from './Components/BusinessDashboard'; // Import the new dashboard
@@ -33,11 +34,14 @@ function App() {
   const [customer, setCustomer] = useState('');
   const [currentDay, setCurrDay] = useState(0);
   const [userType, setUserType] = useState('customer');
+  const [loginType, setLoginType] = useState('customer');
+
+  const [selectedBooking, setSelectedBooking] = useState(null);
 
   // TEMPORARY UNTIL DB MADE
   const [users, setUsers] = useState(new Map());
   const [businesses, setBusinesses] = useState(new Map());
-  const [loggedInUser, setLoggedInUser] = useState(null);
+  const [loggedInUser, setLoggedInUser] = useState([]);
 
   
 
@@ -87,18 +91,83 @@ function App() {
               }
 
               const actual_type = await type(username);
-            if (actual_type.data == userType) {
+              var uType = actual_type.data;
+            if (uType === loginType) {
+              setLoggedInUser([ username, uType ]);
               setError('');
               setUsername('');
               setPassword('');
-              setUserType('customer');
-              setLoggedInUser({ username, userType });
-              setCurrentPage(
-                userType === 'customer' ? 'customerLanding' : 'businessLanding'
-              );
+              setUserType(uType);
+              setCurrentPage(uType === 'customer' ? 'customerLanding' : 'businessLanding');
+              if (uType === 'customer') {
+                const results = await getCustomerBookings(username);
+                const resultsUnique = Array.from(new Set(results.map(a => JSON.stringify(a)))).map(e => JSON.parse(e));
+                var length = Object.keys(resultsUnique)?.length
+                if (length >= 1) {
+                  var i = 0;
+                  var customerBookings = new Map();
+                  while (i < length) {
+                    var newBooking = new Booking(
+                      resultsUnique[i]["start_time"],
+                      resultsUnique[i]["end_time"],
+                      resultsUnique[i]["booking_name"],
+                      resultsUnique[i]["contactInfo"],
+                      resultsUnique[i]["notes"],
+                      resultsUnique[i]["buisness"],
+                      resultsUnique[i]["customer"],
+                      resultsUnique[i]["dates"]
+                    );
+                    if (customerBookings.has(resultsUnique[i]["dates"])) {
+                      var temp = [...customerBookings.get(resultsUnique[i]["dates"])];
+                      temp.push(newBooking);
+                      customerBookings.set(resultsUnique[i]["dates"], temp);
+                    } else {
+                      customerBookings.set(resultsUnique[i]["dates"], [newBooking]);
+                    }
+                    i++;
+                  }
+                }
+                if (customerBookings) {
+                  setBookings(customerBookings);
+                }
+              } else {
+                const results = await getBuisnessBookings(username);
+                const resultsUnique = Array.from(new Set(results.map(a => JSON.stringify(a)))).map(e => JSON.parse(e));
+                var length = Object.keys(resultsUnique)?.length
+                if (length >= 1) {
+                  var i = 0;
+                  var businessBookings = new Map();
+                  while (i < length) {
+                    var newBooking = new Booking(
+                      resultsUnique[i]["start_time"],
+                      resultsUnique[i]["end_time"],
+                      resultsUnique[i]["booking_name"],
+                      resultsUnique[i]["contactInfo"],
+                      resultsUnique[i]["notes"],
+                      resultsUnique[i]["buisness"],
+                      resultsUnique[i]["customer"],
+                      resultsUnique[i]["dates"]
+                    );
+                    if (businessBookings.has(resultsUnique[i]["dates"])) {
+                      var temp = [...businessBookings.get(resultsUnique[i]["dates"])];
+                      temp.push(newBooking);
+                      businessBookings.set(resultsUnique[i]["dates"], temp);
+                    } else {
+                      businessBookings.set(resultsUnique[i]["dates"], [newBooking]);
+                    }
+                    i++;
+                  }
+                }
+                if (businessBookings) {
+                  setBookings(businessBookings);
+                }
+              }
+              getBuisnesses().then(response => {
+                setBusinesses(response.data.map(object => object.username))
+              })
             } else {
               setError(
-                `This account is registered as a `+ actual_type.data + `, not a `+ userType + `.`
+                `This account is registered as a `+ actual_type.data + `, not a `+ loginType + `.`
               );
             }
           } else {
@@ -191,7 +260,7 @@ function App() {
   };
 
   const createBooking = () => {
-    if (!startTime || !endTime || !name || !contactInfo || !business || !customer) {
+    if (!startTime || !endTime || !name || !contactInfo || !business) {
       setError('Please fill in all fields');
       return;
     }
@@ -205,8 +274,11 @@ function App() {
         contactInfo,
         notes,
         business,
-        customer
+        username,
+        dayKey
       );
+
+      addBookingDB(name, contactInfo, startTime, endTime, business, loggedInUser[0], notes, dayKey);
 
       // If no bookings exist for the current day, create a new array
       if (!prevBookings.has(dayKey)) {
@@ -239,7 +311,12 @@ function App() {
 
   switch (currentPage) {
     case 'initial':
-      return <InitialPage pageHandler={setCurrentPage} />;
+      return (
+        <InitialPage 
+          pageHandler={setCurrentPage}
+          loginTypeHandler={setLoginType}
+        />
+      );
     case 'customerLogin':
       return (
         <LoginPage
@@ -283,18 +360,56 @@ function App() {
     case 'customerLanding':
       return (
         <div>
+          <div className='center'>
+            <input
+              className='buttonCustom'
+              type="button"
+              value="Log out"
+              onClick={() => {
+                setCurrentPage('intial')
+                setLoggedInUser([])
+                }}
+            />
+          </div>
           <Calendar
             pageHandler={setCurrentPage}
             bookings={bookings}
             setCurrDay={setCurrDay}
+            userType={userType}
+            setSelectedBooking={setSelectedBooking}
           />
         </div>
       );
     case 'businessLanding':
       return (
-        <BusinessLandingPage
-          pageHandler={setCurrentPage} // Add this line
-        />
+        <div>
+          <div>
+            <div className='center'>
+              <input
+                className='buttonCustom'
+                type="button"
+                value="Manage Business"
+                onClick={() => setCurrentPage('businessManagement')}
+              />
+              <input
+                className='buttonCustom'
+                type="button"
+                value="Log out"
+                onClick={() => {
+                  setCurrentPage('intial')
+                  setLoggedInUser([])
+                  }}
+              />
+            </div>
+            <Calendar
+              pageHandler={setCurrentPage}
+              bookings={bookings}
+              setCurrDay={setCurrDay}
+              userType={userType}
+              setSelectedBooking={setSelectedBooking}
+            />
+          </div>
+        </div>
       );
     case 'createBookings':
       return (
@@ -308,6 +423,8 @@ function App() {
             setNotes={setNotes}
             setBusiness={setBusiness}
             setCustomer={setCustomer}
+            businesses={businesses}
+            business={business}
             error={error}
           />
         </div>
@@ -328,6 +445,14 @@ function App() {
           pageHandler={setCurrentPage}
         />
       );
+    case 'viewBooking':
+      return (
+        <ViewBookingPage
+          pageHandler={setCurrentPage}
+          selectedBooking={selectedBooking}
+          loggedInUser={loggedInUser}
+        />
+      )
     default:
       return <InitialPage pageHandler={setCurrentPage} />;
   }
