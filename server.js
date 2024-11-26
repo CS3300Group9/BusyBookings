@@ -37,8 +37,23 @@ class db_connector {
         resolve(true);
       });
     });
-  }
+    }
 
+    user_type(username) {
+      console.log("Checking type for " + username);
+      return new Promise((resolve, reject) => {
+          this.con.query("select * from users where username = \x22"+ username +"\x22", function (err, result) {
+            console.log(JSON.stringify(result));
+            if (result.length == 0) {
+              resolve("incorrect-user")
+            } else {
+            console.log("Type = " + result[0]["user_type"]);
+            resolve(result[0]["user_type"]);
+            }
+          });
+      });
+    }
+    
   validate(username, hashed_password) {
     console.log("Validating")
     return new Promise((resolve, reject) => {
@@ -104,8 +119,31 @@ app.get('/validate/:name/:password', (req, res) => {
   });
 });
 
+app.get('/type/:name', (req, res) => {
+  const user = req.params.name
+  console.log("TYPE: " + user)
+  db.user_type(user).then((type) => {
+      console.log(type)
+      res.send(type)
+  }).catch((err) => {
+    console.error("Error checking user: ", err);
+  });
+});
 
 app.get('/user/:name', (req, res) => {
+  const user = req.params.name
+  db.user_exists(user).then((exists) => {
+    if (exists) {
+      res.send(true)
+    } else {
+      res.send(false)
+    }
+  }).catch((err) => {
+    console.error("Error checking user: ", err);
+  });
+});
+
+app.get('/bookings/:name', (req, res) => {
   const user = req.params.name
   db.user_exists(user).then((exists) => {
     if (exists) {
