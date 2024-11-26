@@ -52,8 +52,6 @@ function App() {
   // Mock bookings for the Business Dashboard
   //Map of strings (date to object list)
 
-  const [businesses, setBusinesses] = useState(new Map());
-  const [loggedInUser, setLoggedInUser] = useState(null);
   const [businessAvailabilities, setBusinessAvailabilities] = useState(new Map()); // Map<businessId, {startTime, endTime}>
 
 
