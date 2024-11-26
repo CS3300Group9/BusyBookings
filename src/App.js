@@ -10,6 +10,7 @@ import Calendar from './Calendar';
 import LandingPage from './Components/LandingPage';
 import BusinessLandingPage from './Components/BusinessLandingPage';
 import BusinessManagementPage from './Components/BusinessManagementPage';
+import ViewBookingPage from './Components/ViewBookingPage';
 
 
 import BusinessDashboard from './Components/BusinessDashboard'; // Import the new dashboard
@@ -33,11 +34,14 @@ function App() {
   const [customer, setCustomer] = useState('');
   const [currentDay, setCurrDay] = useState(0);
   const [userType, setUserType] = useState('customer');
+  const [loginType, setLoginType] = useState('customer');
+
+  const [selectedBooking, setSelectedBooking] = useState(null);
 
   // TEMPORARY UNTIL DB MADE
   const [users, setUsers] = useState(new Map());
   const [businesses, setBusinesses] = useState(new Map());
-  const [loggedInUser, setLoggedInUser] = useState(null);
+  const [loggedInUser, setLoggedInUser] = useState([]);
 
   
 
@@ -87,18 +91,82 @@ function App() {
               }
 
               const actual_type = await type(username);
-            if (actual_type.data == userType) {
+              var uType = actual_type.data;
+            if (uType === loginType) {
+              setLoggedInUser([ username, uType ]);
               setError('');
               setUsername('');
               setPassword('');
-              setUserType('customer');
-              setLoggedInUser({ username, userType });
-              setCurrentPage(
-                userType === 'customer' ? 'customerLanding' : 'businessLanding'
-              );
+              setUserType(uType);
+              setCurrentPage(uType === 'customer' ? 'customerLanding' : 'businessLanding');
+              if (uType === 'customer') {
+                const results = await getCustomerBookings(username);
+                console.log(results)
+                var length = Object.keys(results)?.length
+                if (length >= 1) {
+                  var i = 0;
+                  var customerBookings = new Map();
+                  while (i < length) {
+                    var newBooking = new Booking(
+                      results[i]["start_time"],
+                      results[i]["end_time"],
+                      results[i]["booking_name"],
+                      results[i]["contactInfo"],
+                      results[i]["notes"],
+                      results[i]["buisness"],
+                      results[i]["customer"],
+                      results[i]["dates"]
+                    );
+                    if (customerBookings.has(results[i]["dates"])) {
+                      var temp = [...customerBookings.get(results[i]["dates"])];
+                      temp.push(newBooking);
+                      customerBookings.set(results[i]["dates"], temp);
+                    } else {
+                      customerBookings.set(results[i]["dates"], [newBooking]);
+                    }
+                    i++;
+                  }
+                }
+                if (customerBookings) {
+                  setBookings(customerBookings);
+                }
+              } else {
+                const results = await getBuisnessBookings(username);
+                var length = Object.keys(results)?.length
+                if (length >= 1) {
+                  var i = 0;
+                  var businessBookings = new Map();
+                  while (i < length) {
+                    var newBooking = new Booking(
+                      results[i]["start_time"],
+                      results[i]["end_time"],
+                      results[i]["booking_name"],
+                      results[i]["contactInfo"],
+                      results[i]["notes"],
+                      results[i]["buisness"],
+                      results[i]["customer"],
+                      results[i]["dates"]
+                    );
+                    if (businessBookings.has(results[i]["dates"])) {
+                      var temp = [...businessBookings.get(results[i]["dates"])];
+                      temp.push(newBooking);
+                      businessBookings.set(results[i]["dates"], temp);
+                    } else {
+                      businessBookings.set(results[i]["dates"], [newBooking]);
+                    }
+                    i++;
+                  }
+                }
+                if (businessBookings) {
+                  setBookings(businessBookings);
+                }
+              }
+              getBuisnesses().then(response => {
+                setBusinesses(response.data.map(object => object.username))
+              })
             } else {
               setError(
-                `This account is registered as a `+ actual_type.data + `, not a `+ userType + `.`
+                `This account is registered as a `+ actual_type.data + `, not a `+ loginType + `.`
               );
             }
           } else {
@@ -191,7 +259,7 @@ function App() {
   };
 
   const createBooking = () => {
-    if (!startTime || !endTime || !name || !contactInfo || !business || !customer) {
+    if (!startTime || !endTime || !name || !contactInfo || !business) {
       setError('Please fill in all fields');
       return;
     }
@@ -205,8 +273,11 @@ function App() {
         contactInfo,
         notes,
         business,
-        customer
+        username,
+        dayKey
       );
+
+      addBookingDB(name, contactInfo, startTime, endTime, business, loggedInUser[0], notes, dayKey);
 
       // If no bookings exist for the current day, create a new array
       if (!prevBookings.has(dayKey)) {
@@ -239,7 +310,12 @@ function App() {
 
   switch (currentPage) {
     case 'initial':
-      return <InitialPage pageHandler={setCurrentPage} />;
+      return (
+        <InitialPage 
+          pageHandler={setCurrentPage}
+          loginTypeHandler={setLoginType}
+        />
+      );
     case 'customerLogin':
       return (
         <LoginPage
@@ -287,14 +363,31 @@ function App() {
             pageHandler={setCurrentPage}
             bookings={bookings}
             setCurrDay={setCurrDay}
+            userType={userType}
+            setSelectedBooking={setSelectedBooking}
           />
         </div>
       );
     case 'businessLanding':
       return (
-        <BusinessLandingPage
-          pageHandler={setCurrentPage} // Add this line
-        />
+        <div>
+          <div>
+            <div>
+            <input
+              type="button"
+              value="ManageBusiness"
+              onClick={() => setCurrentPage('businessManagement')}
+            />
+            </div>
+            <Calendar
+              pageHandler={setCurrentPage}
+              bookings={bookings}
+              setCurrDay={setCurrDay}
+              userType={userType}
+              setSelectedBooking={setSelectedBooking}
+            />
+          </div>
+        </div>
       );
     case 'createBookings':
       return (
@@ -308,6 +401,8 @@ function App() {
             setNotes={setNotes}
             setBusiness={setBusiness}
             setCustomer={setCustomer}
+            businesses={businesses}
+            business={business}
             error={error}
           />
         </div>
@@ -328,6 +423,14 @@ function App() {
           pageHandler={setCurrentPage}
         />
       );
+    case 'viewBooking':
+      return (
+        <ViewBookingPage
+          pageHandler={setCurrentPage}
+          selectedBooking={selectedBooking}
+          loggedInUser={loggedInUser}
+        />
+      )
     default:
       return <InitialPage pageHandler={setCurrentPage} />;
   }
@@ -336,7 +439,7 @@ function App() {
   //Database Booking Functions
 
   //Should be able to call normally
-  async function addBookingDB(name, contact ,start ,end ,buisness, customer, notes){
+  async function addBookingDB(name, contact ,start ,end ,buisness, customer, notes, date){
     console.log('http://localhost:3001/addBooking/' + name + '/' + contact + '/' + start + '/' + end + '/' + buisness + '/' + customer + '/' + notes + '/' + date);
     axios.post('http://localhost:3001/addBooking/' + name + '/' + contact + '/' + start + '/' + end + '/' + buisness + '/' + customer + '/' + notes + '/' + date);
   }    

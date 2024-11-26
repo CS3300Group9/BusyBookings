@@ -1,4 +1,4 @@
-function InitialPage({pageHandler}) {
+function InitialPage({pageHandler, loginTypeHandler}) {
     return (
         <div className="App">
             <h1>Busy Bookings</h1>
@@ -6,12 +6,18 @@ function InitialPage({pageHandler}) {
             <input
               type="button"
               value="I am a customer"
-              onClick={() => pageHandler('customerLogin')}
+              onClick={() => {
+                pageHandler('customerLogin') 
+                loginTypeHandler('customer')
+              }}
             />
             <input
               type="button"
               value="I am a business"
-              onClick={() => pageHandler('businessLogin')}
+              onClick={() => {
+                pageHandler('businessLogin')
+                loginTypeHandler('business')
+              }}
             />
         </div>
     );

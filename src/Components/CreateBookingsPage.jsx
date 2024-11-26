@@ -7,8 +7,11 @@ function CreateBookingsPage({
   setNotes,
   setBusiness,
   setCustomer,
+  businesses,
+  business,
   error,
 }) {
+  console.log(businesses)
   return (
     <div
       style={{
@@ -63,16 +66,13 @@ function CreateBookingsPage({
             />
           </div>
           <div>
-            <input
-              placeholder="Business Name"
-              onChange={(ev) => setBusiness(ev.target.value)}
-            />
-          </div>
-          <div>
-            <input
-              placeholder="Customer ID"
-              onChange={(ev) => setCustomer(ev.target.value)}
-            />
+          <select value={business} onChange={(ev) => setBusiness(ev.target.value)}>
+            {businesses.map((option, index) => (
+              <option key={index} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
           </div>
           <div>
             <input
