@@ -1,3 +1,4 @@
+// Booking class, both types of users need to observe this
 class Booking {
     constructor(startTime, endTime, name, contactInfo, notes, business, customer, date) {
         this.startTime = startTime;
