@@ -1,4 +1,6 @@
 // Components/CreateAccountPage.js
+// USED
+// Just the front end design, nothing else
 import React from 'react';
 import '../index.css'
 

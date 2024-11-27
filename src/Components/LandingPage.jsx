@@ -1,3 +1,6 @@
+// USED
+// Has some logic attached to it, unfortunate, but still works very nice
+
 import React, { useState } from 'react';
 
 function LandingPage() {

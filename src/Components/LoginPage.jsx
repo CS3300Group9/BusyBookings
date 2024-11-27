@@ -1,5 +1,8 @@
 import '../index.css'
 
+// USED
+// Very basic logic attached, still mostly just front end
+
 function LoginPage({
   pageHandler,
   loginHandle,

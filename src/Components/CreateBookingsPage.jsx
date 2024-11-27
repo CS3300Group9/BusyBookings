@@ -1,3 +1,6 @@
+// USED
+// Just the front end design, nothing else
+
 function CreateBookingsPage({
   createBooking,
   setStartTime,

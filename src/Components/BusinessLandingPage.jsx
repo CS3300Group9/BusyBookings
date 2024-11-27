@@ -1,3 +1,4 @@
+// NOT USED
 import React from 'react';
 
 function BusinessLandingPage({ pageHandler, bookings, setCurrDay }) {
