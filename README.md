@@ -32,9 +32,22 @@ Known Bugs / Missing Features
 * Passing in empty data fields may result in an API error
 
 ## Install Guide
-The application is currently deployed to Google Cloud Server and cann be accessed by simply going to the following link:
-https://cs-3300-proj2-app.uc.r.appspot.com/
 
+The application is currently deployed to Google Cloud Server and cann be accessed by simply going to the following link:
+https://cs-3300-proj2-app.uc.r.appspot.com/.
+
+### Prequisites :
+
+The application requires an internet connection and hardware of at least 4GB.
+
+### Dependent Libraries :
+
+Accessing the project through the above link requires no local prerequisites but also will not reflect any local modifications. If the code is desired to be run localy the following are required.
+* Node.js
+* Maven
+
+### Download, Build and Run:
+There is not download or build needed for accesssing the deployed application. Simply access the link provided above.
 
 If desired the code can also be run locally.
 To do so, first download the repository and then run
@@ -45,7 +58,7 @@ This should install all the dependencies required for the application, then do
 
 ### `npm start`
 
-Runs the app in the development mode.\
+to run the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
 The page will reload when you make changes.\
