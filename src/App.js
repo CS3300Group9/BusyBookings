@@ -301,7 +301,7 @@ function App() {
           businesses={businesses}
           setBusinesses={setBusinesses}
           setCurrentBusiness={setCurrentBusiness} // Pass setCurrentBusiness here
-          pageHandler={setCurrentPage}
+          pageHandler={setCurrentPage}//set current page
         />
       );
     default:

@@ -12,7 +12,6 @@ function CreateAccountPage({
   setUserType,
   error,
 }) {
-  // NO LOGIC HERE, KEEP CLEAN
 
   return (
     <div
