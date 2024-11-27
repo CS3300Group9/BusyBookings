@@ -291,7 +291,7 @@ function App() {
           businesses={businesses} // Pass businesses as a Map
           pageHandler={setCurrentPage}
           currentBusiness={currentBusiness}
-          setCurrDay={setCurrDay} //Set current day
+          setCurrDay={setCurrDay} //Set current days
         />
       );
     case 'businessManagement':
