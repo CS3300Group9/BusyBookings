@@ -1,5 +1,8 @@
 import Booking from "../Booking";
 
+// USED
+// very simple, just allows you to view a booking
+
 function ViewBookingPage({pageHandler, selectedBooking, loggedInUser}) {
     return (
         <div className="blueContainer">

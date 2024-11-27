@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import CalendarDays from './CalendarDays';
 import './index.css'
 
+
+//Main calendar class, handles displaying and some logic upates
 export default class Calendar extends Component {
     constructor() {
         super();

@@ -1,4 +1,6 @@
 // Components/BusinessManagementPage.js
+// USED BUT UNFINISHED
+// Was supposed to allow business to update their information, but never finished it (had to be pushed to DB)
 import React, { useState } from 'react';
 
 function BusinessManagementPage({ user, businesses, setBusinesses, pageHandler }) {

@@ -1,5 +1,6 @@
 import Booking from "./Booking";
 
+//Handles displaying each calendar day as well as the booking objects within the Bookings map
 function CalendarDays(props) {
     let firstDayOfMonth = new Date(props.day.getFullYear(), props.day.getMonth(), 1);
     let weekdayOfFirstDay = firstDayOfMonth.getDay();

@@ -1,5 +1,8 @@
 import '../index.css'
 
+// USED
+// Just the front end design, nothing else
+
 function InitialPage({pageHandler, loginTypeHandler}) {
     return (
       <div className="blueContainer">

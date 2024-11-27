@@ -1,3 +1,5 @@
+// The meat of the entire application, handles changing pages, creating users/bookings, logging in, and keep track of many different variables
+// More coments specifying things below
 import './App.css';
 import React, { useState } from 'react';
 import axios from "axios";
@@ -18,47 +20,48 @@ import Booking from './Booking'; // Import the booking class
 import Business from './Business';
 
 function App() {
-  const [currentPage, setCurrentPage] = useState('initial');
-  const [error, setError] = useState('');
+  const [currentPage, setCurrentPage] = useState('initial'); //keeps track of where user is at
+  const [error, setError] = useState(''); //error message to be displayed
   
 
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState(''); //input fields
+  const [password, setPassword] = useState(''); //input fields
 
-  const [startTime, setStartTime] = useState('');
-  const [endTime, setEndTime] = useState('');
-  const [name, setName] = useState('');
-  const [contactInfo, setContactInfo] = useState('');
-  const [notes, setNotes] = useState('');
-  const [business, setBusiness] = useState('');
-  const [customer, setCustomer] = useState('');
-  const [currentDay, setCurrDay] = useState(0);
-  const [userType, setUserType] = useState('customer');
-  const [loginType, setLoginType] = useState('customer');
+  const [startTime, setStartTime] = useState(''); //input fields
+  const [endTime, setEndTime] = useState(''); //input fields
+  const [name, setName] = useState(''); //input fields
+  const [contactInfo, setContactInfo] = useState(''); //input fields
+  const [notes, setNotes] = useState(''); //input fields
+  const [business, setBusiness] = useState(''); //input fields
+  const [customer, setCustomer] = useState(''); //input fields
+  const [currentDay, setCurrDay] = useState(0); //input fields
+  const [userType, setUserType] = useState('customer'); //keeps track of what user type user is
+  const [loginType, setLoginType] = useState('customer'); //keeps track of what type the user selected to login as
 
-  const [selectedBooking, setSelectedBooking] = useState(null);
+  const [selectedBooking, setSelectedBooking] = useState(null); //keeps track of which booking is being viewed
 
   // TEMPORARY UNTIL DB MADE
-  const [users, setUsers] = useState(new Map());
-  const [businesses, setBusinesses] = useState(new Map());
-  const [loggedInUser, setLoggedInUser] = useState([]);
+  const [users, setUsers] = useState(new Map()); //NOT USED ANY MORE
+  const [businesses, setBusinesses] = useState(new Map()); //keeps track of businesses from the DB
+  const [loggedInUser, setLoggedInUser] = useState([]); //Keeps track of logged in username and user type
 
   
 
   //const db = new db_connector;
   //var con = require("./Database/connect.js");
 
-  const [bookings, setBookings] = useState(new Map());
+  const [bookings, setBookings] = useState(new Map()); //Keeps track of all bookings in system, pulled from DB, is of type Map(String (Date) : List[Objects (Bookings)])
 
   //DATABASE API
 
   // Mock bookings for the Business Dashboard
   //Map of strings (date to object list)
 
-  const [businessAvailabilities, setBusinessAvailabilities] = useState(new Map()); // Map<businessId, {startTime, endTime}>
+  const [businessAvailabilities, setBusinessAvailabilities] = useState(new Map());
 
 
   // CHANGE ME FOR SQL DB
+  //Handles the login, creates bookings from DB call, creates businesses from DB call, and of course, validates the inputed information
   const handleLogin = async() => {
     //DATABASE VALIDATE CALL
         //CHECK DATABASE FOR USER
@@ -205,7 +208,7 @@ function App() {
   };
 
 
-
+  //Simply pushes a new user to the DB 
   const handleCreateAccount = async(userType) => {
     if (!username || !password) {
       setError('Please fill in all fields.');
@@ -262,6 +265,7 @@ function App() {
     );
   };
 
+  //Updates the booking information and pushes it to DB
   const createBooking = () => {
     if (!startTime || !endTime || !name || !contactInfo || !business) {
       setError('Please fill in all fields');
@@ -312,6 +316,7 @@ function App() {
     );
   };
 
+  //Determines which page we are on, passes in many props to all the components
   switch (currentPage) {
     case 'initial':
       return (
