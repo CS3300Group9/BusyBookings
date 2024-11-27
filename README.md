@@ -29,9 +29,28 @@ Known Bugs / Missing Features
 * Business users can only have one business attached to their account
 * Little validation of if a booking can actually be made 
 * No real way for a business to add and update their information
+* Passing in empty data fields may result in an API error
 
-## Running locally
-To run locally, first download the repository and then run
+## Install Guide
+
+The application is currently deployed to Google Cloud Server and cann be accessed by simply going to the following link:
+https://cs-3300-proj2-app.uc.r.appspot.com/.
+
+### Prequisites :
+
+The application requires an internet connection and hardware of at least 4GB.
+
+### Dependent Libraries :
+
+Accessing the project through the above link requires no local prerequisites but also will not reflect any local modifications. If the code is desired to be run localy the following are required.
+* Node.js
+* Maven
+
+### Download, Build and Run:
+There is not download or build needed for accesssing the deployed application. Simply access the link provided above.
+
+If desired the code can also be run locally.
+To do so, first download the repository and then run
 
 ### `npm install`
 
@@ -39,18 +58,12 @@ This should install all the dependencies required for the application, then do
 
 ### `npm start`
 
-Runs the app in the development mode.\
+to run the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
 The page will reload when you make changes.\
 You may also see any lint errors in the console.
 
-If running this close to last push, the external database may still be running. 
-However, if it is not, change the api calls to have a new base URL of [http://localhost:3001](http://localhost:3001) and run:
-
-### `node server.js`
-
-This is a hassle to do, so we apologize in advanced if needed to be done.
 
 ## Trouble Shooting
 
@@ -61,4 +74,12 @@ This is a hassle to do, so we apologize in advanced if needed to be done.
 
 2. Get error when logging in, creating booking, or creating a new user
 * Double check that the database is running. It may be that the external database has run out of credits to continue going
-* If so, follow the above steps to remake the database run locally
+* If so, follow the below steps to make the database run locally
+
+1. Change the api calls to have a new base URL of [http://localhost:3001](http://localhost:3001) and run:
+
+### `node server.js`
+
+This is a hassle to do, so we apologize in advanced if needed to be done.
+
+
