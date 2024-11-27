@@ -56,7 +56,7 @@ function CreateBookingsPage({
           </div>
           <div>
           <select value={business} onChange={(ev) => setBusiness(ev.target.value)} className="buttonCustom">
-            {businesses?.map((option, index) => (
+            {businesses.map((option, index) => (
               <option key={index} value={option}>
                 {option}
               </option>
