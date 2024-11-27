@@ -13,6 +13,7 @@ function LoginPage({
   const handleLoginClick = () => {
     // You can add any pre-validation logic here if needed
     loginHandle(userType); // Pass userType to the login handler
+    // userType is what allows for factory class
   };
 
   //NO LOGIC HERE, KEEP CLEAN
